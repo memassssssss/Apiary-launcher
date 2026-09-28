@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apiary Launcher - Скачать</title>
+    <!-- Пиксельные шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #121c17;
+            --bg-panel: rgba(27, 41, 34, 0.92);
+            --bg-card: rgba(34, 54, 44, 0.95);
+            --bg-input: #101a15;
+            
+            --border-dark: #090f0d;
+            --border-soft: #304a3d;
+            --border-bright: #67b58c;
+            
+            --sage-primary: #86d4a8;
+            --sage-hover: #a3e6c0;
+            --sage-muted: #5c9979;
+            --sage-dark: #37634d;
+            
+            --text-main: #f0fdf5;
+            --text-dim: #94c4a9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'JetBrains Mono', monospace;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- ЗАДНИЙ ФОН (ГИФКА) --- */
+        .bg-gif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('./bac.gif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
+
+        /* Тёмная вуаль поверх гифки для читаемости текста */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, rgba(18, 28, 23, 0.65) 0%, rgba(9, 15, 13, 0.92) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- ШАПКА --- */
+        header {
+            width: 100%;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-panel);
+            border-bottom: 4px solid var(--border-dark);
+            box-shadow: 0 4px 0 var(--border-soft);
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--sage-primary);
+            text-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        .pixel-logo-frame {
+            width: 38px;
+            height: 38px;
+            background: var(--sage-primary);
+            border: 3px solid var(--border-dark);
+            box-shadow: inset -3px -3px 0px var(--sage-dark), inset 3px 3px 0px #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--border-dark);
+        }
+
+        .version-badge {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--sage-primary);
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border: 2px solid var(--border-dark);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        /* --- ОСНОВНОЙ КОНТЕНТ --- */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            width: 100%;
+        }
+
+        /* Главная карточка с загрузкой */
+        .hero-card {
+            background: var(--bg-panel);
+            border: 4px solid var(--border-dark);
+            box-shadow: inset -4px -4px 0px var(--border-soft), 0 10px 30px rgba(0,0,0,0.5);
+            padding: 40px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 28px;
+            color: var(--sage-primary);
+            text-shadow: 3px 3px 0px var(--border-dark);
+            line-height: 1.4;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--text-dim);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* Большая кнопка скачать */
+        .btn-download-main {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--sage-primary);
+            color: var(--border-dark);
+            text-decoration: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            padding: 20px 40px;
+            border: 4px solid var(--border-dark);
+            box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff, 0 6px 0 var(--border-dark);
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
+            transition: all 0.15s ease;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-download-main:hover {
+            background: var(--sage-hover);
+            transform: translateY(-3px);
+            box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff, 0 9px 0 var(--border-dark);
+        }
+
+        .btn-download-main:active {
+            transform: translateY(3px);
+            box-shadow: inset 3px 3px 0px var(--sage-dark), 0 3px 0 var(--border-dark);
+        }
+
+        .btn-subtext {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: bold;
+            opacity: 0.8;
+            text-shadow: none;
+        }
+
+        /* --- СЧЁТЧИК ЗАГРУЗОК --- */
+        .download-counter-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-input);
+            border: 2px solid var(--border-dark);
+            box-shadow: inset 2px 2px 0px #000;
+            padding: 8px 16px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        .download-counter-val {
+            color: var(--sage-primary);
+            font-size: 12px;
+        }
+
+        /* --- ФИЧИ ЛАУНЧЕРА (Сетка) --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 3px solid var(--border-dark);
+            box-shadow: inset -3px -3px 0px var(--border-soft);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-card h3 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: var(--sage-primary);
+            text-transform: uppercase;
+            border-bottom: 2px dashed var(--border-soft);
+            padding-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* --- ПОДВАЛ --- */
+        footer {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background: var(--bg-panel);
+            border-top: 4px solid var(--border-dark);
+            font-size: 12px;
+            color: var(--sage-muted);
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 16px; }
+            .hero-title { font-size: 18px; }
+            .btn-download-main { font-size: 14px; padding: 16px 24px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновая гифка и затемнение -->
+    <div class="bg-gif"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Верхняя шапка -->
+    <header>
+        <div class="logo">
+            <div class="pixel-logo-frame">⛏</div>
+            APIARY SMP
+        </div>
+        <div class="version-badge">v1.5.0</div>
+    </header>
+
+    <!-- Основной блок -->
+    <main>
+        
+        <div class="hero-card">
+            <h1 class="hero-title">APIARY LAUNCHER</h1>
+            <p class="hero-subtitle">
+                Официальный кастомный лаунчер для комфортной игры на сервере Apiary SMP.
+                Быстрая установка сборок, встроенное управление Java и мягкий Soft Sage дизайн.
+            </p>
+
+            <!-- Ссылка на файл лаунчера -->
+            <a href="https://github.com/memassssssss/Apiary-launcher/releases/download/v1.5.0/Apiary.Launcher.Setup.1.5.0.exe" id="downloadBtn" class="btn-download-main" download>
+                <span>СКАЧАТЬ ДЛЯ WINDOWS</span>
+                <span class="btn-subtext">Windows 10 / 11 (x64) • .exe</span>
+            </a>
+
+            <!-- Счётчик скачиваний -->
+            <div class="download-counter-box">
+                <span>📥 СКАЧАНО:</span>
+                <span id="downloadCount" class="download-counter-val">Загрузка...</span>
+            </div>
+        </div>
+
+        <!-- Карточки особенностей -->
+        <section class="features-grid">
+            
+            <div class="feature-card">
+                <h3>⚡ Автоподключение</h3>
+                <p>Все актуальные моды и сборки сервера обновляются и скачиваются автоматически в один клик.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>☕ Smart Java</h3>
+                <p>Лаунчер сам подбирает правильную версию Java под каждую сборку Minecraft или позволяет указать свою.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>🌿 Soft Sage Style</h3>
+                <p>Удобный асимметричный интерфейс в нежных пастельно-зеленых тонах без лишнего визуального шума.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Подвал -->
+    <footer>
+        Launcher by MemASS
+    </footer>
+
+    <!-- Скрипт подсчёта скачиваний -->
+<!-- Скрипт подсчёта скачиваний -->
+    <script>
+        const API_NAMESPACE = "apiary-smp-memass";
+const API_KEY = "launcher-downloads-count";
+
+const countEl = document.getElementById('downloadCount');
+const dlBtn = document.getElementById('downloadBtn');
+
+// Время блокировки повторного накрута (например, 24 часа в миллисекундах)
+const COOLDOWN_TIME = 24 * 60 * 60 * 1000; 
+
+function getLocalCount() {
+    return parseInt(localStorage.getItem('local_dl_count') || '1');
+}
+
+function updateUI(value) {
+    countEl.textContent = Number(value).toLocaleString('ru-RU') + " РАЗ";
+    localStorage.setItem('local_dl_count', value);
+}
+
+// Отображаем локальное число
+updateUI(getLocalCount());
+
+// Получение общего количества с сервера
+async function fetchDownloadCount() {
+    try {
+        const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}`);
+        if (res.ok) {
+            const data = await res.json();
+            if (data && typeof data.count === 'number') {
+                updateUI(data.count);
+            }
+        }
+    } catch (err) {
+        console.warn("Ошибка получения данных счётчика:", err);
+    }
+}
+
+// Увеличение счётчика с защитой от спама
+async function incrementDownloadCount() {
+    const lastDownload = localStorage.getItem('last_dl_timestamp');
+    const now = Date.now();
+
+    // Защита от дублирующих кликов (дебаунс кнопки на 3 секунды)
+
+
+    // Если с последнего скачивания прошло меньше 24 часов — счетчик НЕ увеличиваем
+    if (lastDownload && (now - parseInt(lastDownload)) < COOLDOWN_TIME) {
+        console.log("Скачивание уже засчитано сегодня. Повторный счетчик заблокирован.");
+        return;
+    }
+
+    // Запоминаем время скачивания
+    localStorage.setItem('last_dl_timestamp', now.toString());
+
+    // Мгновенно обновляем UI
+    updateUI(getLocalCount() + 1);
+
+    // Отправляем запрос на сервер
+    try {
+        const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}/up`);
+        if (res.ok) {
+            const data = await res.json();
+            if (data && typeof data.count === 'number') {
+                updateUI(data.count);
+            }
+        }
+    } catch (err) {
+        console.warn("Не удалось обновить счетчик на сервере:", err);
+    }
+}
+
+fetchDownloadCount();
+
+dlBtn.addEventListener('click', () => {
+    incrementDownloadCount();
+});
+    </script>
+
+</body>
+</html>
