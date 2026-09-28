@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Apiary Launcher - Soft Sage Edition</title>
+    <!-- Подключение пиксельных шрифтов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Нежные пастельно-зеленые и шалфейные оттенки */
+            --bg-dark: #121c17;
+            --bg-panel: #1b2922;
+            --bg-card: #22362c;
+            --bg-input: #101a15;
+            
+            --border-dark: #090f0d;
+            --border-soft: #304a3d;
+            --border-bright: #67b58c;
+            
+            --sage-primary: #86d4a8; /* Нежный зеленый */
+            --sage-hover: #a3e6c0;
+            --sage-muted: #5c9979;
+            --sage-dark: #37634d;
+            
+            --text-main: #f0fdf5;
+            --text-dim: #94c4a9;
+            --danger: #e27d8b;
+            --danger-hover: #f09ca8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'JetBrains Mono', 'VT323', monospace;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Разблокировка ввода для ВСЕХ полей */
+        input, select, textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            pointer-events: auto !important;
+        }
+
+        /* Главный контейнер (Лево - Арт, Право - Интерфейс) */
+        .launcher-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* --- ЛЕВАЯ ЧАСТЬ: Зона под Full HD Арт --- */
+        .art-section {
+            flex: 1;
+            position: relative;
+            /* Настройки для правильного масштабирования Full HD фона */
+            background-color: #0d1411;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 4px solid var(--border-dark);
+            box-shadow: inset -4px 0 0 var(--border-soft);
+        }
+
+        /* Затемнение арта по краям для читаемости */
+        .art-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(18,28,23,0.7) 0%, transparent 20%, transparent 80%, rgba(18,28,23,0.9) 100%);
+            pointer-events: none;
+        }
+
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--sage-primary);
+            text-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        .pixel-logo-frame {
+            width: 32px;
+            height: 32px;
+            background: var(--sage-primary);
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--sage-dark), inset 2px 2px 0px #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--border-dark);
+        }
+
+        .version-tag {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--sage-primary);
+            background: var(--bg-input);
+            padding: 6px 10px;
+            border: 2px solid var(--border-dark);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        /* Декоративный текст поверх арта (можно убрать) */
+        .art-overlay-info {
+            z-index: 2;
+            padding: 30px;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .art-overlay-info h1 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        
+        .art-overlay-info p {
+            color: var(--sage-primary);
+            font-size: 14px;
+        }
+
+        /* --- ПРАВАЯ ЧАСТЬ: Боковая панель UI --- */
+        .ui-sidebar {
+            width: 420px;
+            background: var(--bg-panel);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        /* Скроллируемая область настроек */
+        .sidebar-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-block {
+            background: var(--bg-card);
+            border: 3px solid var(--border-dark);
+            box-shadow: inset -3px -3px 0px var(--border-soft);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        h2 { 
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px; 
+            color: var(--sage-primary); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 0px var(--border-dark);
+            margin-bottom: 4px;
+            border-bottom: 2px dashed var(--border-soft);
+            padding-bottom: 8px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 11px; color: var(--text-dim); font-weight: bold; }
+
+        input[type="text"], select {
+            padding: 8px 10px;
+            background: var(--bg-input);
+            color: var(--sage-primary);
+            font-size: 12px;
+            border: 2px solid var(--border-dark);
+            box-shadow: inset 2px 2px 0px #000;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus { 
+            border-color: var(--border-bright); 
+        }
+
+        .row { display: flex; gap: 8px; align-items: center; }
+        .row input, .row select { flex: 1; }
+
+        .btn-action {
+            background: var(--bg-panel);
+            color: var(--text-main);
+            cursor: pointer;
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--border-soft), inset 2px 2px 0px rgba(255,255,255,0.05);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            padding: 8px 10px;
+            transition: all 0.1s ease;
+        }
+
+        .btn-action:hover { 
+            background: var(--border-soft); 
+            color: var(--sage-primary);
+        }
+
+        .btn-action:active {
+            box-shadow: inset 2px 2px 0px var(--border-dark);
+        }
+
+        .btn-danger { color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+
+        /* --- Сетка сборок --- */
+        .instances-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .instance-card {
+            background: var(--bg-input);
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--border-soft);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .instance-card:hover { border-color: var(--sage-muted); }
+        .instance-card.active {
+            border-color: var(--sage-primary);
+            box-shadow: inset 0 0 0 1px var(--sage-primary), inset -2px -2px 0px var(--sage-dark);
+        }
+
+        .instance-header-row { display: flex; align-items: center; gap: 6px; }
+        .instance-pixel-icon {
+            width: 20px; height: 20px;
+            background: var(--border-soft); border: 2px solid var(--border-dark);
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
+        }
+
+        .instance-title {
+            font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--text-main);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        .badge-loader {
+            background: var(--border-soft); color: var(--sage-primary);
+            font-family: 'Press Start 2P', monospace; font-size: 7px;
+            padding: 2px 4px; border: 1px solid var(--border-dark); text-transform: uppercase;
+        }
+
+        .modal-box {
+            background: var(--bg-input); border: 2px solid var(--border-dark);
+            padding: 10px; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;
+        }
+
+        /* --- Ползунок ОЗУ --- */
+        .ram-info { display: flex; justify-content: space-between; color: var(--sage-primary); font-size: 12px; }
+        input[type="range"] {
+            appearance: none; -webkit-appearance: none; width: 100%;
+            background: var(--bg-input); border: 2px solid var(--border-dark); height: 10px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 14px; height: 14px;
+            background: var(--sage-primary); border: 2px solid var(--border-dark); cursor: pointer;
+        }
+
+        /* --- Консоль (теперь внутри скролла) --- */
+        .console-box {
+            height: 120px;
+            background: #080d0a; border: 2px solid var(--border-dark);
+            padding: 8px; font-size: 10px; overflow-y: auto;
+            white-space: pre-wrap; word-break: break-all; color: var(--text-dim);
+            user-select: text !important; -webkit-user-select: text !important;
+        }
+        .log-info { color: #8cb4df; }
+        .log-game { color: var(--sage-primary); }
+        .log-error { color: var(--danger); }
+
+        /* --- ЗАКРЕПЛЕННЫЙ НИЗ (Статус и Запуск) --- */
+        .sidebar-sticky-bottom {
+            background: var(--bg-panel);
+            border-top: 4px solid var(--border-dark);
+            box-shadow: 0 -4px 0 var(--border-soft);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .status-text { font-size: 11px; color: var(--sage-primary); margin-bottom: 6px; }
+        .progress-bar-bg {
+            width: 100%; height: 10px; background: var(--bg-input);
+            border: 2px solid var(--border-dark); padding: 1px;
+        }
+        .progress-bar-fill { height: 100%; width: 0%; background: var(--sage-primary); transition: width 0.2s; }
+
+        .btn-play {
+            background: var(--sage-primary);
+            color: var(--border-dark);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            padding: 16px;
+            cursor: pointer;
+            border: 4px solid var(--border-dark);
+            box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
+            transition: transform 0.1s;
+        }
+
+        .btn-play:hover { background: var(--sage-hover); transform: translateY(-2px); }
+        .btn-play:active { transform: translateY(2px); box-shadow: inset 3px 3px 0px var(--sage-dark); }
+        .btn-play:disabled { 
+            background: var(--bg-card); color: var(--sage-muted); cursor: not-allowed; 
+            box-shadow: inset -2px -2px 0px var(--border-dark); text-shadow: none;
+        }
+
+        /* --- Скроллбар --- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-input); }
+        ::-webkit-scrollbar-thumb { background: var(--border-soft); border: 1px solid var(--border-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--sage-primary); }
+
+    </style>
+</head>
+<body>
+
+    <div class="launcher-wrapper">
+        
+        <!-- ЛЕВАЯ ЧАСТЬ: МЕСТО ДЛЯ FULL HD АРТА -->
+        <!-- Укажи путь к своему изображению в url() -->
+        <main class="art-section" style="background-image: url('./bac.gif');">
+            <header>
+                <div class="logo">
+                    <div class="pixel-logo-frame">⛏</div>
+                    APIARY LAUNCHER
+                </div>
+                <div class="version-tag">v1.5.0</div>
+            </header>
+
+            <!-- Текст поверх фона (по желанию можно удалить этот div) -->
+            <div class="art-overlay-info">
+                <h1>APIARY SMP</h1>
+                <p>Возвращайся домой, пчёлка.</p>
+            </div>
+        </main>
+
+        <!-- ПРАВАЯ ЧАСТЬ: БОКОВАЯ ПАНЕЛЬ ИНТЕРФЕЙСА -->
+        <aside class="ui-sidebar">
+            
+            <div class="sidebar-scrollable">
+                <!-- Профиль -->
+                <div class="section-block">
+                    <h2>Профиль</h2>
+                    <div class="form-group">
+                        <select id="accountSelect"></select>
+                    </div>
+                    <div class="row">
+                        <input type="text" id="newNickInput" placeholder="Новый ник">
+                        <button class="btn-action" id="addNickBtn">+ Добавить</button>
+                    </div>
+                    <button class="btn-action btn-danger" id="removeNickBtn">Удалить профиль</button>
+                </div>
+
+                <!-- Сборки Minecraft -->
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Сборки</h2>
+                        <button class="btn-action" id="toggleAddInstanceBtn">+ Создать</button>
+                    </div>
+
+                    <div class="instances-grid" id="instancesGrid"></div>
+
+                    <!-- Форма создания сборки -->
+                    <div id="addInstanceBlock" class="modal-box" style="display: none;">
+                        <div class="form-group">
+                            <input type="text" id="newInstanceName" placeholder="Имя (напр: SageCraft)">
+                        </div>
+                        <div class="form-group">
+                            <select id="versionSelect"></select>
+                        </div>
+                        <div class="form-group">
+                            <select id="loaderSelect">
+                                <option value="vanilla">Vanilla</option>
+                                <option value="fabric">Fabric</option>
+                                <option value="forge">Forge</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <button class="btn-action" id="createInstanceBtn" style="background: var(--sage-primary); color: #000;">Создать</button>
+                            <button class="btn-action" id="cancelInstanceBtn">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Настройки -->
+                <div class="section-block">
+                    <h2>Настройки</h2>
+                    <div class="form-group">
+                        <div class="ram-info">
+                            <span style="color: var(--text-dim);">ОЗУ:</span>
+                            <span id="ramValue">4.0 ГБ</span>
+                        </div>
+                        <input type="range" id="ramRange" min="1" max="16" step="0.5" value="4">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="javaTypeSelect">Использование Java</label>
+                        <select id="javaTypeSelect">
+                            <option value="auto">Автоматически</option>
+                            <option value="custom">Свой путь</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="javaCustomGroup" style="display: none;">
+                        <div class="row">
+                            <input type="text" id="javaCustomPathInput" placeholder="C:\...\javaw.exe">
+                            <button class="btn-action" id="browseJavaBtn">Обзор</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Консоль -->
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Консоль</h2>
+                        <button class="btn-action" id="clearConsoleBtn">Очистить</button>
+                    </div>
+                    <div class="console-box" id="consoleBox"></div>
+                </div>
+            </div>
+
+            <!-- Закрепленный низ: Статус и Кнопка -->
+            <div class="sidebar-sticky-bottom">
+                <div>
+                    <div class="status-text" id="statusBox">Ожидание действий...</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <button class="btn-play" id="playBtn">ИГРАТЬ</button>
+            </div>
+
+        </aside>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

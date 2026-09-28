@@ -27,6 +27,10 @@
             
             --text-main: #f0fdf5;
             --text-dim: #94c4a9;
+
+            --warn-bg: rgba(45, 30, 20, 0.98);
+            --warn-border: #d97736;
+            --warn-text: #fca5a5;
         }
 
         * {
@@ -61,7 +65,7 @@
             z-index: -2;
         }
 
-        /* Тёмная вуаль поверх гифки для читаемости текста */
+        /* Тёмная вуаль поверх гифки */
         .bg-overlay {
             position: fixed;
             inset: 0;
@@ -73,7 +77,7 @@
         /* --- ШАПКА --- */
         header {
             width: 100%;
-            padding: 24px 40px;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -104,6 +108,32 @@
             justify-content: center;
             font-size: 18px;
             color: var(--border-dark);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-github {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--text-main);
+            background: var(--bg-card);
+            padding: 8px 12px;
+            border: 2px solid var(--border-dark);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+            text-decoration: none;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-github:hover {
+            background: var(--border-soft);
+            color: var(--sage-hover);
         }
 
         .version-badge {
@@ -140,7 +170,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
             backdrop-filter: blur(10px);
         }
 
@@ -218,6 +248,124 @@
             font-size: 12px;
         }
 
+        /* --- КНОПКА ВЫЗОВА ВСПЛЫВАЮЩЕГО ОКНА --- */
+        .btn-smartscreen-trigger {
+            background: transparent;
+            border: none;
+            color: var(--warn-border);
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            opacity: 0.85;
+        }
+
+        .btn-smartscreen-trigger:hover {
+            color: var(--warn-text);
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+
+        /* --- ВСПЛЫВАЮЩЕЕ МОДАЛЬНОЕ ОКНО --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .smartscreen-modal-content {
+            background: var(--warn-bg);
+            border: 4px solid var(--warn-border);
+            box-shadow: inset -4px -4px 0px #7c2d12, 0 12px 35px rgba(0, 0, 0, 0.8);
+            padding: 24px;
+            max-width: 580px;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .smartscreen-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: var(--warn-text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px dashed #7c2d12;
+            padding-bottom: 12px;
+        }
+
+        .modal-close-btn {
+            background: var(--border-dark);
+            border: 2px solid var(--warn-border);
+            color: var(--warn-text);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            transition: all 0.15s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: var(--warn-border);
+            color: #fff;
+        }
+
+        .smartscreen-body {
+            font-size: 13px;
+            color: #ffedd5;
+            line-height: 1.6;
+        }
+
+        .smartscreen-steps {
+            background: rgba(0,0,0,0.35);
+            border: 1px solid var(--warn-border);
+            padding: 12px 16px;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .smartscreen-steps ol {
+            margin-left: 18px;
+            margin-top: 6px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
         /* --- ФИЧИ ЛАУНЧЕРА (Сетка) --- */
         .features-grid {
             display: grid;
@@ -258,13 +406,26 @@
             text-align: center;
             background: var(--bg-panel);
             border-top: 4px solid var(--border-dark);
-            font-size: 12px;
+            font-size: 11px;
             color: var(--sage-muted);
             font-family: 'Press Start 2P', monospace;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        footer a {
+            color: var(--sage-primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 600px) {
-            header { padding: 16px; }
+            header { padding: 16px; flex-direction: column; gap: 12px; }
             .hero-title { font-size: 18px; }
             .btn-download-main { font-size: 14px; padding: 16px 24px; width: 100%; }
         }
@@ -282,7 +443,12 @@
             <div class="pixel-logo-frame">⛏</div>
             APIARY SMP
         </div>
-        <div class="version-badge">v1.5.0</div>
+        <div class="header-right">
+            <a href="https://github.com/memassssssss/Apiary-launcher" target="_blank" class="btn-github">
+                💻 GITHUB
+            </a>
+            <div class="version-badge">v1.5.0</div>
+        </div>
     </header>
 
     <!-- Основной блок -->
@@ -306,6 +472,11 @@
                 <span>📥 СКАЧАНО:</span>
                 <span id="downloadCount" class="download-counter-val">Загрузка...</span>
             </div>
+
+            <!-- Текстовая кнопка-ссылка для открытия всплывающего окна -->
+            <button type="button" id="openSmartscreenModal" class="btn-smartscreen-trigger">
+                🛡️ Windows ругается при запуске?
+            </button>
         </div>
 
         <!-- Карточки особенностей -->
@@ -322,97 +493,135 @@
             </div>
 
             <div class="feature-card">
-                <h3>🌿 Soft Sage Style</h3>
-                <p>Удобный асимметричный интерфейс в нежных пастельно-зеленых тонах без лишнего визуального шума.</p>
+                <h3>🌿 Open Source</h3>
+                <p>Код лаунчера полностью открыт на GitHub. Вы можете проверить безопасность каждого файла лично.</p>
             </div>
 
         </section>
 
     </main>
 
+    <!-- ВСПЛЫВАЮЩЕЕ ОКНО (SmartScreen Modal) -->
+    <div id="smartscreenModal" class="modal-overlay">
+        <div class="smartscreen-modal-content">
+            <div class="smartscreen-title">
+                <span>🛡️ Предупреждение SmartScreen</span>
+                <button type="button" class="modal-close-btn" id="closeSmartscreenModal">✕</button>
+            </div>
+            <div class="smartscreen-body">
+                <p>При первом запуске Windows может показать синее окно защиты. Это происходит потому, что у независимых инди-приложений нет дорогого коммерческого цифрового сертификата издателя.</p>
+                <div class="smartscreen-steps">
+                    <strong>Как запустить:</strong>
+                    <ol>
+                        <li>Нажмите синюю ссылку <strong>«Подробнее»</strong> в окне Windows.</li>
+                        <li>Нажмите появившуюся кнопку <strong>«Выполнить в любом случае»</strong>.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Подвал -->
     <footer>
-        Launcher by MemASS
+        <div>Launcher by MemASS</div>
+        <div><a href="https://github.com/memassssssss/Apiary-launcher" target="_blank">Исходный код на GitHub</a></div>
     </footer>
 
-    <!-- Скрипт подсчёта скачиваний -->
-<!-- Скрипт подсчёта скачиваний -->
+    <!-- Скрипты -->
     <script>
+        // --- Счётчик скачиваний ---
         const API_NAMESPACE = "apiary-smp-memass";
-const API_KEY = "launcher-downloads-count";
+        const API_KEY = "launcher-downloads-count";
 
-const countEl = document.getElementById('downloadCount');
-const dlBtn = document.getElementById('downloadBtn');
+        const countEl = document.getElementById('downloadCount');
+        const dlBtn = document.getElementById('downloadBtn');
 
-// Время блокировки повторного накрута (например, 24 часа в миллисекундах)
-const COOLDOWN_TIME = 24 * 60 * 60 * 1000; 
+        const COOLDOWN_TIME = 24 * 60 * 60 * 1000; 
 
-function getLocalCount() {
-    return parseInt(localStorage.getItem('local_dl_count') || '1');
-}
+        function getLocalCount() {
+            return parseInt(localStorage.getItem('local_dl_count') || '1');
+        }
 
-function updateUI(value) {
-    countEl.textContent = Number(value).toLocaleString('ru-RU') + " РАЗ";
-    localStorage.setItem('local_dl_count', value);
-}
+        function updateUI(value) {
+            countEl.textContent = Number(value).toLocaleString('ru-RU') + " РАЗ";
+            localStorage.setItem('local_dl_count', value);
+        }
 
-// Отображаем локальное число
-updateUI(getLocalCount());
+        updateUI(getLocalCount());
 
-// Получение общего количества с сервера
-async function fetchDownloadCount() {
-    try {
-        const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}`);
-        if (res.ok) {
-            const data = await res.json();
-            if (data && typeof data.count === 'number') {
-                updateUI(data.count);
+        async function fetchDownloadCount() {
+            try {
+                const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && typeof data.count === 'number') {
+                        updateUI(data.count);
+                    }
+                }
+            } catch (err) {
+                console.warn("Ошибка получения данных счётчика:", err);
             }
         }
-    } catch (err) {
-        console.warn("Ошибка получения данных счётчика:", err);
-    }
-}
 
-// Увеличение счётчика с защитой от спама
-async function incrementDownloadCount() {
-    const lastDownload = localStorage.getItem('last_dl_timestamp');
-    const now = Date.now();
+        async function incrementDownloadCount() {
+            const lastDownload = localStorage.getItem('last_dl_timestamp');
+            const now = Date.now();
 
-    // Защита от дублирующих кликов (дебаунс кнопки на 3 секунды)
+            if (lastDownload && (now - parseInt(lastDownload)) < COOLDOWN_TIME) {
+                console.log("Скачивание уже засчитано сегодня.");
+                return;
+            }
 
+            localStorage.setItem('last_dl_timestamp', now.toString());
+            updateUI(getLocalCount() + 1);
 
-    // Если с последнего скачивания прошло меньше 24 часов — счетчик НЕ увеличиваем
-    if (lastDownload && (now - parseInt(lastDownload)) < COOLDOWN_TIME) {
-        console.log("Скачивание уже засчитано сегодня. Повторный счетчик заблокирован.");
-        return;
-    }
-
-    // Запоминаем время скачивания
-    localStorage.setItem('last_dl_timestamp', now.toString());
-
-    // Мгновенно обновляем UI
-    updateUI(getLocalCount() + 1);
-
-    // Отправляем запрос на сервер
-    try {
-        const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}/up`);
-        if (res.ok) {
-            const data = await res.json();
-            if (data && typeof data.count === 'number') {
-                updateUI(data.count);
+            try {
+                const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}/up`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && typeof data.count === 'number') {
+                        updateUI(data.count);
+                    }
+                }
+            } catch (err) {
+                console.warn("Не удалось обновить счетчик на сервере:", err);
             }
         }
-    } catch (err) {
-        console.warn("Не удалось обновить счетчик на сервере:", err);
-    }
-}
 
-fetchDownloadCount();
+        fetchDownloadCount();
 
-dlBtn.addEventListener('click', () => {
-    incrementDownloadCount();
-});
+        dlBtn.addEventListener('click', () => {
+            incrementDownloadCount();
+        });
+
+        // --- Управление всплывающим окном SmartScreen ---
+        const modal = document.getElementById('smartscreenModal');
+        const openModalBtn = document.getElementById('openSmartscreenModal');
+        const closeModalBtn = document.getElementById('closeSmartscreenModal');
+
+        // Открытие по клику
+        openModalBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        // Закрытие по крестику
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Закрытие по клику вне окна
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Закрытие по нажатию Esc
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
     </script>
 
 </body>
