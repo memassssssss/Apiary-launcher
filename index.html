@@ -468,7 +468,10 @@
             </a>
 
             <!-- Счётчик скачиваний -->
-
+            <div class="download-counter-box">
+                <span>СКАЧАНО:</span>
+                <span id="downloadCount" class="download-counter-val">---</span>
+            </div>
 
             <!-- Текстовая кнопка-ссылка для открытия всплывающего окна -->
             <button type="button" id="openSmartscreenModal" class="btn-smartscreen-trigger">
@@ -526,6 +529,41 @@
 
     <!-- Скрипты -->
     <script>
+        // --- Управление всплывающим окном SmartScreen ---
+        const modal = document.getElementById('smartscreenModal');
+        const openModalBtn = document.getElementById('openSmartscreenModal');
+        const closeModalBtn = document.getElementById('closeSmartscreenModal');
+
+        if (openModalBtn && modal) {
+            // Открытие по клику
+            openModalBtn.addEventListener('click', () => {
+                modal.classList.add('active');
+            });
+        }
+
+        if (closeModalBtn && modal) {
+            // Закрытие по крестику
+            closeModalBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+        }
+
+        if (modal) {
+            // Закрытие по клику вне окна
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        }
+
+        // Закрытие по нажатию Esc
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
+
         // --- Счётчик скачиваний ---
         const API_NAMESPACE = "apiary-smp-memass";
         const API_KEY = "launcher-downloads-count";
@@ -540,7 +578,9 @@
         }
 
         function updateUI(value) {
-            countEl.textContent = Number(value).toLocaleString('ru-RU') + " РАЗ";
+            if (countEl) {
+                countEl.textContent = Number(value).toLocaleString('ru-RU') + " РАЗ";
+            }
             localStorage.setItem('local_dl_count', value);
         }
 
@@ -587,38 +627,11 @@
 
         fetchDownloadCount();
 
-        dlBtn.addEventListener('click', () => {
-            incrementDownloadCount();
-        });
-
-        // --- Управление всплывающим окном SmartScreen ---
-        const modal = document.getElementById('smartscreenModal');
-        const openModalBtn = document.getElementById('openSmartscreenModal');
-        const closeModalBtn = document.getElementById('closeSmartscreenModal');
-
-        // Открытие по клику
-        openModalBtn.addEventListener('click', () => {
-            modal.classList.add('active');
-        });
-
-        // Закрытие по крестику
-        closeModalBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
-
-        // Закрытие по клику вне окна
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
-
-        // Закрытие по нажатию Esc
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                modal.classList.remove('active');
-            }
-        });
+        if (dlBtn) {
+            dlBtn.addEventListener('click', () => {
+                incrementDownloadCount();
+            });
+        }
     </script>
 
 </body>
