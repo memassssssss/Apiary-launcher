@@ -1,0 +1,965 @@
+/* --- ПЕРЕМЕННЫЕ ТЕМ --- */
+:root {
+    /* Дефолтная зелёная */
+    --bg-dark: #0f1712;
+    --bg-panel: rgba(22, 36, 28, 0.94);
+    --bg-card: rgba(29, 48, 37, 0.92);
+    --bg-input: #0a120d;
+    
+    --border-dark: #070c09;
+    --border-soft: #2d4738;
+    --border-bright: #67b58c;
+    
+    --sage-primary: #86d4a8;
+    --sage-hover: #a3e6c0;
+    --sage-muted: #5c9979;
+    --sage-dark: #37634d;
+    
+    --text-main: #f0fdf5;
+    --text-dim: #94c4a9;
+
+    --warn-bg: rgba(38, 24, 16, 0.98);
+    --warn-border: #d97736;
+    --warn-text: #fca5a5;
+}
+
+[data-theme="yellow"] {
+    --bg-dark: #17140c;
+    --bg-panel: rgba(36, 32, 19, 0.94);
+    --bg-card: rgba(48, 42, 25, 0.92);
+    --bg-input: #120f08;
+    
+    --border-dark: #0c0904;
+    --border-soft: #473d22;
+    --border-bright: #e6c867;
+    
+    --sage-primary: #facc15;
+    --sage-hover: #fde047;
+    --sage-muted: #a38932;
+    --sage-dark: #63531b;
+    
+    --text-main: #fffdf0;
+    --text-dim: #d4c894;
+}
+
+[data-theme="pink"] {
+    --bg-dark: #170f14;
+    --bg-panel: rgba(36, 22, 31, 0.94);
+    --bg-card: rgba(48, 29, 41, 0.92);
+    --bg-input: #120a0f;
+    
+    --border-dark: #0c0509;
+    --border-soft: #472b3a;
+    --border-bright: #e6679e;
+    
+    --sage-primary: #f472b6;
+    --sage-hover: #fbcfe8;
+    --sage-muted: #a85c83;
+    --sage-dark: #63374d;
+    
+    --text-main: #fdf0f5;
+    --text-dim: #c494a9;
+}
+
+/* --- БАЗОВЫЕ СТИЛИ --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'JetBrains Mono', monospace;
+    image-rendering: pixelated;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+/* --- ЗАДНИЙ ФОН (ГИФКА) --- */
+.bg-gif {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('./bg-green.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    transition: background-image 0.3s ease;
+}
+
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(15, 23, 18, 0.65) 0%, var(--bg-dark) 100%);
+    z-index: -1;
+    pointer-events: none;
+    transition: background 0.3s ease;
+}
+
+/* --- ШАПКА --- */
+header {
+    width: 100%;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-panel);
+    border-bottom: 4px solid var(--border-dark);
+    box-shadow: 0 4px 0 var(--border-soft);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    color: var(--sage-primary);
+    text-shadow: 2px 2px 0px var(--border-dark);
+}
+
+.pixel-logo-frame {
+    width: 36px;
+    height: 36px;
+    background: var(--sage-primary);
+    border: 3px solid var(--border-dark);
+    box-shadow: inset -3px -3px 0px var(--sage-dark), inset 3px 3px 0px #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--border-dark);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.theme-switcher-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-input);
+    padding: 6px 10px;
+    border: 2px solid var(--border-dark);
+}
+
+.theme-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--text-dim);
+}
+
+.theme-switcher {
+    display: flex;
+    gap: 6px;
+}
+
+.theme-btn {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border-dark);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.theme-btn:hover { transform: scale(1.25); }
+.theme-btn.active { outline: 2px solid #fff; border-color: #fff; }
+
+.theme-green { background: #86d4a8; }
+.theme-yellow { background: #facc15; }
+.theme-pink { background: #f472b6; }
+
+.btn-github {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--text-main);
+    background: var(--bg-card);
+    padding: 8px 12px;
+    border: 2px solid var(--border-dark);
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-github:hover {
+    background: var(--border-soft);
+    color: var(--sage-hover);
+}
+
+.version-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--sage-primary);
+    background: var(--bg-input);
+    padding: 8px 12px;
+    border: 2px solid var(--border-dark);
+}
+
+/* --- ОСНОВНОЙ КОНТЕНТ --- */
+main {
+    flex: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 70px;
+    width: 100%;
+}
+
+/* HERO CARD */
+.hero-card {
+    background: var(--bg-panel);
+    border: 4px solid var(--border-dark);
+    box-shadow: inset -4px -4px 0px var(--border-soft), 0 12px 35px rgba(0,0,0,0.6);
+    padding: 40px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    backdrop-filter: blur(10px);
+}
+
+.hero-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    background: var(--sage-dark);
+    color: var(--sage-primary);
+    padding: 6px 12px;
+    border: 2px solid var(--border-dark);
+}
+
+.hero-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 30px;
+    color: var(--sage-primary);
+    text-shadow: 3px 3px 0px var(--border-dark);
+}
+
+.hero-subtitle {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 650px;
+    line-height: 1.6;
+}
+
+.btn-download-main {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--sage-primary);
+    color: var(--border-dark);
+    text-decoration: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    padding: 18px 36px;
+    border: 4px solid var(--border-dark);
+    box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff, 0 6px 0 var(--border-dark);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-download-main:hover {
+    background: var(--sage-hover);
+    transform: translateY(-2px);
+    box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff, 0 8px 0 var(--border-dark);
+}
+
+.btn-download-main:active {
+    transform: translateY(3px);
+    box-shadow: inset 3px 3px 0px var(--sage-dark), 0 3px 0 var(--border-dark);
+}
+
+.btn-subtext {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: bold;
+    opacity: 0.85;
+}
+
+.download-counter-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-input);
+    border: 2px solid var(--border-dark);
+    padding: 8px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--sage-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--sage-primary);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+.download-counter-val {
+    color: var(--sage-primary);
+    font-size: 11px;
+}
+
+.btn-smartscreen-trigger {
+    background: transparent;
+    border: none;
+    color: var(--warn-border);
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: all 0.2s ease;
+    opacity: 0.85;
+}
+
+.btn-smartscreen-trigger:hover {
+    color: var(--warn-text);
+    opacity: 1;
+}
+
+/* SECTION HEADERS */
+.section-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.section-header h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--sage-primary);
+    text-shadow: 2px 2px 0px var(--border-dark);
+}
+
+.section-header p {
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
+/* ИНТЕРАКТИВНЫЙ MOCKUP LAUNCHER */
+.preview-section {
+    width: 100%;
+}
+
+.launcher-mockup {
+    background: var(--bg-panel);
+    border: 4px solid var(--border-dark);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.launcher-mockup.minimized {
+    height: 42px;
+    overflow: hidden;
+}
+
+.launcher-mockup.maximized {
+    transform: scale(1.03);
+}
+
+.mockup-header {
+    background: var(--bg-input);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--border-dark);
+    position: relative;
+}
+
+.mockup-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.mockup-dots .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid var(--border-dark);
+    cursor: pointer;
+    padding: 0;
+}
+
+.dot.red { background: #ef4444; }
+.dot.yellow { background: #f59e0b; }
+.dot.green { background: #10b981; }
+
+.mockup-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+}
+
+.mockup-body {
+    display: flex;
+    min-height: 260px;
+}
+
+.mockup-sidebar {
+    width: 160px;
+    background: rgba(0,0,0,0.2);
+    border-right: 2px solid var(--border-dark);
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mockup-item {
+    font-size: 12px;
+    padding: 10px 12px;
+    border: 2px solid transparent;
+    color: var(--text-dim);
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mockup-item:hover {
+    color: var(--text-main);
+    background: rgba(255,255,255,0.05);
+}
+
+.mockup-item.active {
+    background: var(--bg-card);
+    border-color: var(--border-dark);
+    color: var(--sage-primary);
+    font-weight: bold;
+}
+
+.mockup-main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
+    position: relative;
+}
+
+.mockup-tab-content {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.mockup-tab-content.active {
+    display: flex;
+}
+
+.mockup-status-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-dark);
+    padding: 15px;
+}
+
+.mockup-status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-online {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #34d399;
+}
+
+.mockup-ping {
+    font-size: 11px;
+    color: var(--sage-primary);
+}
+
+.mockup-server-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--text-main);
+    margin-top: 8px;
+}
+
+.mockup-server-info {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+}
+
+.mockup-launch-status {
+    font-size: 12px;
+    color: var(--text-dim);
+    background: var(--bg-input);
+    border: 2px solid var(--border-dark);
+    padding: 10px 14px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.mockup-play-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-input);
+    border: 2px solid var(--border-dark);
+    padding: 10px 16px;
+    gap: 12px;
+}
+
+.mockup-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.mockup-nick-input {
+    background: var(--bg-card);
+    border: 2px solid var(--border-dark);
+    color: var(--sage-primary);
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 12px;
+    width: 110px;
+    outline: none;
+}
+
+.mockup-play-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    background: var(--sage-primary);
+    color: var(--border-dark);
+    padding: 10px 18px;
+    border: 2px solid var(--border-dark);
+    box-shadow: inset -2px -2px 0px var(--sage-dark);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mockup-play-btn:hover {
+    background: var(--sage-hover);
+    transform: translateY(-1px);
+}
+
+.mockup-play-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Вкладки Моды/Темы/Настройки в макете */
+.mockup-panel-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--sage-primary);
+    margin-bottom: 8px;
+}
+
+.mockup-mods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mockup-mod-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-main);
+    background: var(--bg-card);
+    padding: 8px 12px;
+    border: 2px solid var(--border-dark);
+    cursor: pointer;
+}
+
+.mockup-mod-item input {
+    accent-color: var(--sage-primary);
+    cursor: pointer;
+}
+
+.mockup-theme-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mockup-theme-option {
+    background: var(--bg-card);
+    border: 2px solid var(--border-dark);
+    color: var(--text-main);
+    padding: 10px 14px;
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.mockup-theme-option.active {
+    border-color: var(--sage-primary);
+    color: var(--sage-primary);
+    font-weight: bold;
+}
+
+.mockup-setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-card);
+    padding: 12px;
+    border: 2px solid var(--border-dark);
+}
+
+.setting-label {
+    font-size: 12px;
+    color: var(--text-main);
+}
+
+.setting-label strong {
+    color: var(--sage-primary);
+}
+
+.mockup-range {
+    accent-color: var(--sage-primary);
+    cursor: pointer;
+}
+
+.mockup-select {
+    background: var(--bg-input);
+    color: var(--text-main);
+    border: 2px solid var(--border-dark);
+    padding: 6px 10px;
+    outline: none;
+}
+
+/* FEATURES GRID (3 карточки) */
+.features-section { width: 100%; }
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border: 3px solid var(--border-dark);
+    box-shadow: inset -3px -3px 0px var(--border-soft);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+.feature-icon {
+    font-size: 28px;
+}
+
+.feature-card h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--sage-primary);
+    line-height: 1.4;
+}
+
+.feature-card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+}
+
+.feature-card code {
+    background: var(--bg-input);
+    color: var(--sage-primary);
+    padding: 2px 6px;
+    border: 1px solid var(--border-dark);
+    font-size: 11px;
+}
+
+/* ИНТЕРАКТИВНЫЙ ТЕРМИНАЛ */
+.terminal-section { width: 100%; }
+
+.terminal-box {
+    background: #080d0a;
+    border: 4px solid var(--border-dark);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.terminal-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed var(--border-soft);
+    padding-bottom: 8px;
+}
+
+.terminal-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--sage-muted);
+}
+
+.term-clear-btn {
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: var(--text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.term-clear-btn:hover {
+    color: var(--text-main);
+    border-color: var(--sage-primary);
+}
+
+.terminal-body {
+    height: 160px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    padding-right: 6px;
+}
+
+.term-line { color: var(--text-main); }
+.term-line.system { color: var(--text-dim); }
+.term-line.user { color: var(--sage-primary); }
+.term-line.success { color: #34d399; }
+.term-line.error { color: #f87171; }
+.term-highlight { color: var(--sage-primary); font-weight: bold; }
+
+.terminal-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-input);
+    border: 2px solid var(--border-dark);
+    padding: 6px 12px;
+}
+
+.term-prompt {
+    font-size: 12px;
+    color: var(--sage-primary);
+    font-weight: bold;
+}
+
+#terminalInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-main);
+    font-size: 12px;
+}
+
+.term-send-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    background: var(--sage-primary);
+    color: var(--border-dark);
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.terminal-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.term-chip {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    color: var(--sage-primary);
+    font-size: 11px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.term-chip:hover {
+    background: var(--sage-primary);
+    color: var(--border-dark);
+}
+
+/* STEPS SECTION */
+.steps-section { width: 100%; }
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.step-card {
+    background: var(--bg-panel);
+    border: 3px solid var(--border-dark);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+.step-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 24px;
+    color: var(--sage-dark);
+}
+
+.step-card h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: var(--sage-primary);
+}
+
+.step-card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+}
+
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.active { display: flex; }
+
+.smartscreen-modal-content {
+    background: var(--warn-bg);
+    border: 4px solid var(--warn-border);
+    padding: 24px;
+    max-width: 580px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.smartscreen-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--warn-text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #7c2d12;
+    padding-bottom: 12px;
+}
+
+.modal-close-btn {
+    background: var(--border-dark);
+    border: 2px solid var(--warn-border);
+    color: var(--warn-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.smartscreen-body {
+    font-size: 13px;
+    color: #ffedd5;
+    line-height: 1.6;
+}
+
+.smartscreen-steps {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--warn-border);
+    padding: 12px 16px;
+    margin-top: 10px;
+}
+
+.smartscreen-steps ol {
+    margin-left: 20px;
+    margin-top: 6px;
+}
+
+/* FOOTER */
+footer {
+    width: 100%;
+    padding: 24px;
+    text-align: center;
+    background: var(--bg-panel);
+    border-top: 4px solid var(--border-dark);
+    font-size: 11px;
+    color: var(--sage-muted);
+    font-family: 'Press Start 2P', monospace;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+footer a {
+    color: var(--sage-primary);
+    text-decoration: none;
+}
+
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 650px) {
+    header { padding: 16px; flex-direction: column; gap: 14px; }
+    .header-right { flex-wrap: wrap; justify-content: center; }
+    .hero-title { font-size: 20px; }
+    .btn-download-main { font-size: 13px; padding: 16px; width: 100%; }
+    .mockup-body { flex-direction: column; }
+    .mockup-sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
+}

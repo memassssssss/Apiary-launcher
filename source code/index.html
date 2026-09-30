@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Apiary Launcher - Soft Sage Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #121c17;
+            --bg-panel: #1b2922;
+            --bg-card: #22362c;
+            --bg-input: #101a15;
+            
+            --border-dark: #090f0d;
+            --border-soft: #304a3d;
+            --border-bright: #67b58c;
+            
+            --sage-primary: #86d4a8;
+            --sage-hover: #a3e6c0;
+            --sage-muted: #5c9979;
+            --sage-dark: #37634d;
+            
+            --text-main: #f0fdf5;
+            --text-dim: #94c4a9;
+            --danger: #e27d8b;
+            --danger-hover: #f09ca8;
+            --art-overlay: #121c17;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'JetBrains Mono', 'VT323', monospace;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        input, select, textarea {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            pointer-events: auto !important;
+        }
+
+        .launcher-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .art-section {
+            flex: 1;
+            position: relative;
+            background-color: #0d1411;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 4px solid var(--border-dark);
+            box-shadow: inset -4px 0 0 var(--border-soft);
+        }
+
+        .art-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                color-mix(in srgb, var(--art-overlay, #121c17) 70%, transparent) 0%,
+                transparent 20%,
+                transparent 80%,
+                color-mix(in srgb, var(--art-overlay, #121c17) 90%, transparent) 100%
+            );
+            pointer-events: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 15, 13, 0.88);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-window {
+            width: 860px;
+            max-width: 92vw;
+            height: 620px;
+            max-height: 88vh;
+            background: var(--bg-panel);
+            border: 4px solid var(--border-dark);
+            box-shadow: inset -4px -4px 0px var(--border-soft), 0 12px 40px rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--bg-card);
+            padding: 14px 18px;
+            border-bottom: 3px solid var(--border-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: var(--sage-primary);
+            text-shadow: 1px 1px 0px var(--border-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close-btn {
+            background: var(--bg-input);
+            color: var(--danger);
+            border: 2px solid var(--border-dark);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        .modal-close-btn:hover { background: var(--danger); color: #fff; }
+
+        .modal-tabs {
+            display: flex;
+            background: var(--bg-dark);
+            border-bottom: 3px solid var(--border-dark);
+            padding: 0 12px;
+            gap: 6px;
+        }
+
+        .tab-btn {
+            background: var(--bg-panel);
+            color: var(--text-dim);
+            border: 2px solid var(--border-dark);
+            border-bottom: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--sage-primary);
+            box-shadow: inset 0 2px 0 var(--sage-primary);
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .mod-search-bar {
+            display: flex;
+            gap: 10px;
+        }
+        .mod-search-bar input {
+            flex: 1;
+        }
+
+        .mods-list-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mod-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--border-soft);
+            padding: 12px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .mod-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-input);
+            border: 2px solid var(--border-dark);
+            object-fit: cover;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .mod-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow: hidden;
+        }
+
+        .mod-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mod-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--sage-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mod-author {
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        .mod-description {
+            font-size: 11px;
+            color: var(--text-main);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+
+        .mod-stats {
+            font-size: 9px;
+            color: var(--sage-muted);
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-install {
+            background: var(--sage-primary);
+            color: var(--border-dark);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 8px 12px;
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--sage-dark);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .btn-install:hover { background: var(--sage-hover); }
+        .btn-install:disabled { background: var(--border-soft); color: var(--text-dim); cursor: not-allowed; box-shadow: none; }
+
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--sage-primary);
+            text-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        .pixel-logo-frame {
+            width: 32px;
+            height: 32px;
+            background: var(--sage-primary);
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--sage-dark), inset 2px 2px 0px #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--border-dark);
+        }
+
+        .version-tag {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--sage-primary);
+            background: var(--bg-input);
+            padding: 6px 10px;
+            border: 2px solid var(--border-dark);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        .art-overlay-info {
+            z-index: 2;
+            padding: 30px;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .art-overlay-info h1 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        
+        .art-overlay-info p {
+            color: var(--sage-primary);
+            font-size: 14px;
+        }
+
+        .ui-sidebar {
+            width: 420px;
+            background: var(--bg-panel);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .sidebar-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-block {
+            background: var(--bg-card);
+            border: 3px solid var(--border-dark);
+            box-shadow: inset -3px -3px 0px var(--border-soft);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        h2 { 
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px; 
+            color: var(--sage-primary); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 0px var(--border-dark);
+            margin-bottom: 4px;
+            border-bottom: 2px dashed var(--border-soft);
+            padding-bottom: 8px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 11px; color: var(--text-dim); font-weight: bold; }
+
+        input[type="text"], select {
+            padding: 8px 10px;
+            background: var(--bg-input);
+            color: var(--sage-primary);
+            font-size: 12px;
+            border: 2px solid var(--border-dark);
+            box-shadow: inset 2px 2px 0px #000;
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus { 
+            border-color: var(--border-bright); 
+        }
+
+        .row { display: flex; gap: 8px; align-items: center; }
+        .row input, .row select { flex: 1; }
+
+        .btn-action {
+            background: var(--bg-panel);
+            color: var(--text-main);
+            cursor: pointer;
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--border-soft), inset 2px 2px 0px rgba(255,255,255,0.05);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            padding: 8px 10px;
+            transition: all 0.1s ease;
+        }
+
+        .btn-action:hover { 
+            background: var(--border-soft); 
+            color: var(--sage-primary);
+        }
+
+        .btn-action:active {
+            box-shadow: inset 2px 2px 0px var(--border-dark);
+        }
+
+        .btn-danger { color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+
+        .instances-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .instance-card {
+            background: var(--bg-input);
+            border: 2px solid var(--border-dark);
+            box-shadow: inset -2px -2px 0px var(--border-soft);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .instance-card:hover { border-color: var(--sage-muted); }
+        .instance-card.active {
+            border-color: var(--sage-primary);
+            box-shadow: inset 0 0 0 1px var(--sage-primary), inset -2px -2px 0px var(--sage-dark);
+        }
+
+        .instance-header-row { display: flex; align-items: center; gap: 6px; }
+        .instance-pixel-icon {
+            width: 20px; height: 20px;
+            background: var(--border-soft); border: 2px solid var(--border-dark);
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
+        }
+
+        .instance-title {
+            font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--text-main);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        .badge-loader {
+            background: var(--border-soft); color: var(--sage-primary);
+            font-family: 'Press Start 2P', monospace; font-size: 7px;
+            padding: 2px 4px; border: 1px solid var(--border-dark); text-transform: uppercase;
+        }
+
+        .modal-box {
+            background: var(--bg-input); border: 2px solid var(--border-dark);
+            padding: 10px; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;
+        }
+
+        .ram-info { display: flex; justify-content: space-between; color: var(--sage-primary); font-size: 12px; }
+        input[type="range"] {
+            appearance: none; -webkit-appearance: none; width: 100%;
+            background: var(--bg-input); border: 2px solid var(--border-dark); height: 10px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 14px; height: 14px;
+            background: var(--sage-primary); border: 2px solid var(--border-dark); cursor: pointer;
+        }
+
+        .console-box {
+            height: 120px;
+            background: #080d0a; border: 2px solid var(--border-dark);
+            padding: 8px; font-size: 10px; overflow-y: auto;
+            white-space: pre-wrap; word-break: break-all; color: var(--text-dim);
+            user-select: text !important; -webkit-user-select: text !important;
+        }
+        .log-info { color: #8cb4df; }
+        .log-game { color: var(--sage-primary); }
+        .log-error { color: var(--danger); }
+
+        .sidebar-sticky-bottom {
+            background: var(--bg-panel);
+            border-top: 4px solid var(--border-dark);
+            box-shadow: 0 -4px 0 var(--border-soft);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .status-text { font-size: 11px; color: var(--sage-primary); margin-bottom: 6px; }
+        .progress-bar-bg {
+            width: 100%; height: 10px; background: var(--bg-input);
+            border: 2px solid var(--border-dark); padding: 1px;
+        }
+        .progress-bar-fill { height: 100%; width: 0%; background: var(--sage-primary); transition: width 0.2s; }
+
+        .btn-play {
+            background: var(--sage-primary);
+            color: var(--border-dark);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            padding: 16px;
+            cursor: pointer;
+            border: 4px solid var(--border-dark);
+            box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
+            transition: transform 0.1s;
+        }
+
+        .btn-play:hover { background: var(--sage-hover); transform: translateY(-2px); }
+        .btn-play:active { transform: translateY(2px); box-shadow: inset 3px 3px 0px var(--sage-dark); }
+        .btn-play:disabled { 
+            background: var(--bg-card); color: var(--sage-muted); cursor: not-allowed; 
+            box-shadow: inset -2px -2px 0px var(--border-dark); text-shadow: none;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-input); }
+        ::-webkit-scrollbar-thumb { background: var(--border-soft); border: 1px solid var(--border-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--sage-primary); }
+    </style>
+</head>
+<body>
+
+    <div class="launcher-wrapper">
+        <main class="art-section" style="background-image: url('./bac.gif');">
+            <header>
+                <div class="logo">
+                    <div class="pixel-logo-frame">⛏</div>
+                    APIARY LAUNCHER
+                </div>
+                <div class="version-tag">v1.5.0</div>
+            </header>
+
+            <div class="art-overlay-info">
+                <h1>APIARY SMP</h1>
+                <p>Возвращайся домой, пчёлка.</p>
+            </div>
+        </main>
+
+        <aside class="ui-sidebar">
+            <div class="sidebar-scrollable">
+                <div class="section-block">
+                    <h2>Профиль</h2>
+                    
+                    <div class="form-group">
+                        <label for="accountTypeSelect">Тип аккаунта</label>
+                        <select id="accountTypeSelect">
+                            <option value="offline">Пиратский (Offline)</option>
+                            <option value="microsoft">Microsoft (Лицензия)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select id="accountSelect"></select>
+                    </div>
+
+                    <div class="row" id="offlineAddRow">
+                        <input type="text" id="newNickInput" placeholder="Новый ник">
+                        <button class="btn-action" id="addNickBtn">+ Добавить</button>
+                    </div>
+
+                    <div class="form-group" id="msAuthRow" style="display: none;">
+                        <button class="btn-action" id="msLoginBtn" style="background: var(--sage-primary); color: #000;">Войти через Microsoft</button>
+                    </div>
+
+                    <button class="btn-action btn-danger" id="removeNickBtn">Удалить профиль</button>
+                </div>
+
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Сборки</h2>
+                        <div class="row" style="gap: 4px;">
+                            <button class="btn-action" id="openModManagerBtn">🧩 Моды</button>
+                            <button class="btn-action" id="toggleAddInstanceBtn">+ Создать</button>
+                        </div>
+                    </div>
+
+                    <div class="instances-grid" id="instancesGrid"></div>
+
+                    <div id="addInstanceBlock" class="modal-box" style="display: none;">
+                        <div class="form-group">
+                            <input type="text" id="newInstanceName" placeholder="Имя (напр: SageCraft)">
+                        </div>
+                        <div class="form-group">
+                            <select id="versionSelect"></select>
+                        </div>
+                        <div class="form-group">
+                            <select id="loaderSelect">
+                                <option value="vanilla">Vanilla</option>
+                                <option value="fabric">Fabric</option>
+                                <option value="forge">Forge</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <button class="btn-action" id="createInstanceBtn" style="background: var(--sage-primary); color: #000;">Создать</button>
+                            <button class="btn-action" id="cancelInstanceBtn">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Настройки</h2>
+                        <button class="btn-action" id="openThemeEditorBtn">🎨 Тема</button>
+                    </div>
+                    <div class="form-group">
+                        <div class="ram-info">
+                            <span style="color: var(--text-dim);">ОЗУ:</span>
+                            <span id="ramValue">4.0 ГБ</span>
+                        </div>
+                        <input type="range" id="ramRange" min="1" max="16" step="0.5" value="4">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="javaTypeSelect">Использование Java</label>
+                        <select id="javaTypeSelect">
+                            <option value="auto">Автоматически</option>
+                            <option value="custom">Свой путь</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="javaCustomGroup" style="display: none;">
+                        <div class="row">
+                            <input type="text" id="javaCustomPathInput" placeholder="C:\...\javaw.exe">
+                            <button class="btn-action" id="browseJavaBtn">Обзор</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Консоль</h2>
+                        <button class="btn-action" id="clearConsoleBtn">Очистить</button>
+                    </div>
+                    <div class="console-box" id="consoleBox"></div>
+                </div>
+            </div>
+
+            <div class="sidebar-sticky-bottom">
+                <div>
+                    <div class="status-text" id="statusBox">Ожидание действий...</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <button class="btn-play" id="playBtn">ИГРАТЬ</button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Модальное окно менеджера модов (Modrinth) -->
+    <div id="modManagerModal" class="modal-overlay" style="display: none;">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>🧩 Менеджер модов — </span>
+                    <span id="modManagerInstanceName" style="color: var(--text-main);">...</span>
+                    <span id="modManagerInstanceDetails" style="font-size: 8px; color: var(--sage-muted); margin-left: 6px;">()</span>
+                </div>
+                <button id="closeModManagerBtn" class="modal-close-btn">X</button>
+            </div>
+            <div class="modal-tabs">
+                <button id="tabSearchMods" class="tab-btn active">Поиск модов</button>
+                <button id="tabInstalledMods" class="tab-btn">Установленные</button>
+            </div>
+            <div class="modal-body">
+                <div id="modSearchTabContent" style="display: flex; flex-direction: column; gap: 14px;">
+                    <div class="mod-search-bar">
+                        <input type="text" id="modSearchInput" placeholder="Название мода...">
+                        <button id="modSearchBtn" class="btn-action" style="background: var(--sage-primary); color: #000;">Найти</button>
+                    </div>
+                    <div id="modSearchResults" class="mods-list-grid"></div>
+                </div>
+                <div id="modInstalledTabContent" style="display: none; flex-direction: column; gap: 14px;">
+                    <div id="installedModsList" class="mods-list-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактора темы -->
+    <div id="themeEditorModal" class="modal-overlay" style="display: none;">
+        <div class="modal-window" style="width: 640px; height: auto; max-height: 90vh;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>🎨 Редактор и пресеты тем</span>
+                </div>
+                <button id="closeThemeEditorBtn" class="modal-close-btn">X</button>
+            </div>
+            <div class="modal-body" style="gap: 14px; overflow-y: auto;">
+                
+                <h2>Пресеты тем</h2>
+                <div class="modal-box" style="margin-top: 0;">
+                    <div class="form-group">
+                        <label>Выбор пресета</label>
+                        <div class="row">
+                            <select id="presetSelect"></select>
+                            <button class="btn-action" id="applyPresetBtn" style="background: var(--sage-primary); color: #000;">Применить</button>
+                            <button class="btn-action btn-danger" id="deletePresetBtn" style="display:none;">Удалить</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 6px;">
+                        <label>Сохранить текущую палитру как пресет</label>
+                        <div class="row">
+                            <input type="text" id="newPresetNameInput" placeholder="Название пресета (напр. My Pink Style)">
+                            <button class="btn-action" id="savePresetBtn">+ Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Настройка палитры</h2>
+
+                <div class="form-group">
+                    <label>Фоновое изображение (URL или путь)</label>
+                    <div class="row">
+                        <input type="text" id="bgImageUrlInput" placeholder="./bac.gif">
+                        <button class="btn-action" id="browseBgBtn">Обзор</button>
+                    </div>
+                </div>
+                
+                <h2>Фон и Панели</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Фон приложения (--bg-dark)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgDark">
+                            <input type="text" id="text_bgDark">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Градиент арта (--art-overlay)</label>
+                        <div class="row">
+                            <input type="color" id="color_artOverlay">
+                            <input type="text" id="text_artOverlay">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Боковая панель (--bg-panel)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgPanel">
+                            <input type="text" id="text_bgPanel">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Карточки / Блоки (--bg-card)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgCard">
+                            <input type="text" id="text_bgCard">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Поля ввода / Списки (--bg-input)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgInput">
+                            <input type="text" id="text_bgInput">
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Акценты и Кнопки</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Основной акцент (--sage-primary)</label>
+                        <div class="row">
+                            <input type="color" id="color_sagePrimary">
+                            <input type="text" id="text_sagePrimary">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Наведение (--sage-hover)</label>
+                        <div class="row">
+                            <input type="color" id="color_sageHover">
+                            <input type="text" id="text_sageHover">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Темный акцент/тени (--sage-dark)</label>
+                        <div class="row">
+                            <input type="color" id="color_sageDark">
+                            <input type="text" id="text_sageDark">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Опасность / Удалить (--danger)</label>
+                        <div class="row">
+                            <input type="color" id="color_danger">
+                            <input type="text" id="text_danger">
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Границы и Текст</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Темная рамка (--border-dark)</label>
+                        <div class="row">
+                            <input type="color" id="color_borderDark">
+                            <input type="text" id="text_borderDark">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Мягкая рамка (--border-soft)</label>
+                        <div class="row">
+                            <input type="color" id="color_borderSoft">
+                            <input type="text" id="text_borderSoft">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Основной текст (--text-main)</label>
+                        <div class="row">
+                            <input type="color" id="color_textMain">
+                            <input type="text" id="text_textMain">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Вторичный текст (--text-dim)</label>
+                        <div class="row">
+                            <input type="color" id="color_textDim">
+                            <input type="text" id="text_textDim">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="justify-content: flex-end; margin-top: 12px;">
+                    <button class="btn-action" id="resetThemeBtn" style="margin-right: auto;">Сбросить цвета</button>
+                    <button class="btn-action btn-danger" id="cancelThemeBtn">Отмена</button>
+                    <button class="btn-action" id="saveThemeBtn" style="background: var(--sage-primary); color: #000;">Применить и Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

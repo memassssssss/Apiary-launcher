@@ -3,433 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apiary Launcher - Скачать</title>
+    <title>Apiary Launcher — Твой идеальный старт на Apiary SMP</title>
+
     <!-- Пиксельные шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --bg-dark: #121c17;
-            --bg-panel: rgba(27, 41, 34, 0.92);
-            --bg-card: rgba(34, 54, 44, 0.95);
-            --bg-input: #101a15;
-            
-            --border-dark: #090f0d;
-            --border-soft: #304a3d;
-            --border-bright: #67b58c;
-            
-            --sage-primary: #86d4a8;
-            --sage-hover: #a3e6c0;
-            --sage-muted: #5c9979;
-            --sage-dark: #37634d;
-            
-            --text-main: #f0fdf5;
-            --text-dim: #94c4a9;
-
-            --warn-bg: rgba(45, 30, 20, 0.98);
-            --warn-border: #d97736;
-            --warn-text: #fca5a5;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'JetBrains Mono', monospace;
-            image-rendering: pixelated;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* --- ЗАДНИЙ ФОН (ГИФКА) --- */
-        .bg-gif {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('./bac.gif');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -2;
-        }
-
-        /* Тёмная вуаль поверх гифки */
-        .bg-overlay {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle, rgba(18, 28, 23, 0.65) 0%, rgba(9, 15, 13, 0.92) 100%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* --- ШАПКА --- */
-        header {
-            width: 100%;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-panel);
-            border-bottom: 4px solid var(--border-dark);
-            box-shadow: 0 4px 0 var(--border-soft);
-            backdrop-filter: blur(8px);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 18px;
-            color: var(--sage-primary);
-            text-shadow: 2px 2px 0px var(--border-dark);
-        }
-
-        .pixel-logo-frame {
-            width: 38px;
-            height: 38px;
-            background: var(--sage-primary);
-            border: 3px solid var(--border-dark);
-            box-shadow: inset -3px -3px 0px var(--sage-dark), inset 3px 3px 0px #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: var(--border-dark);
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-github {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: var(--text-main);
-            background: var(--bg-card);
-            padding: 8px 12px;
-            border: 2px solid var(--border-dark);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-            text-decoration: none;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-github:hover {
-            background: var(--border-soft);
-            color: var(--sage-hover);
-        }
-
-        .version-badge {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: var(--sage-primary);
-            background: var(--bg-input);
-            padding: 8px 12px;
-            border: 2px solid var(--border-dark);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-        }
-
-        /* --- ОСНОВНОЙ КОНТЕНТ --- */
-        main {
-            flex: 1;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 50px;
-            width: 100%;
-        }
-
-        /* Главная карточка с загрузкой */
-        .hero-card {
-            background: var(--bg-panel);
-            border: 4px solid var(--border-dark);
-            box-shadow: inset -4px -4px 0px var(--border-soft), 0 10px 30px rgba(0,0,0,0.5);
-            padding: 40px;
-            width: 100%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .hero-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 28px;
-            color: var(--sage-primary);
-            text-shadow: 3px 3px 0px var(--border-dark);
-            line-height: 1.4;
-        }
-
-        .hero-subtitle {
-            font-size: 15px;
-            color: var(--text-dim);
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        /* Большая кнопка скачать */
-        .btn-download-main {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: var(--sage-primary);
-            color: var(--border-dark);
-            text-decoration: none;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 18px;
-            padding: 20px 40px;
-            border: 4px solid var(--border-dark);
-            box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff, 0 6px 0 var(--border-dark);
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
-            transition: all 0.15s ease;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-download-main:hover {
-            background: var(--sage-hover);
-            transform: translateY(-3px);
-            box-shadow: inset -4px -4px 0px var(--sage-dark), inset 4px 4px 0px #fff, 0 9px 0 var(--border-dark);
-        }
-
-        .btn-download-main:active {
-            transform: translateY(3px);
-            box-shadow: inset 3px 3px 0px var(--sage-dark), 0 3px 0 var(--border-dark);
-        }
-
-        .btn-subtext {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            font-weight: bold;
-            opacity: 0.8;
-            text-shadow: none;
-        }
-
-        /* --- СЧЁТЧИК ЗАГРУЗОК --- */
-        .download-counter-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--bg-input);
-            border: 2px solid var(--border-dark);
-            box-shadow: inset 2px 2px 0px #000;
-            padding: 8px 16px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: var(--text-dim);
-        }
-
-        .download-counter-val {
-            color: var(--sage-primary);
-            font-size: 12px;
-        }
-
-        /* --- КНОПКА ВЫЗОВА ВСПЛЫВАЮЩЕГО ОКНА --- */
-        .btn-smartscreen-trigger {
-            background: transparent;
-            border: none;
-            color: var(--warn-border);
-            font-size: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            cursor: pointer;
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 8px;
-            opacity: 0.85;
-        }
-
-        .btn-smartscreen-trigger:hover {
-            color: var(--warn-text);
-            opacity: 1;
-            transform: translateY(-1px);
-        }
-
-        /* --- ВСПЛЫВАЮЩЕЕ МОДАЛЬНОЕ ОКНО --- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeIn 0.2s ease-out;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .smartscreen-modal-content {
-            background: var(--warn-bg);
-            border: 4px solid var(--warn-border);
-            box-shadow: inset -4px -4px 0px #7c2d12, 0 12px 35px rgba(0, 0, 0, 0.8);
-            padding: 24px;
-            max-width: 580px;
-            width: 100%;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: relative;
-            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .smartscreen-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            color: var(--warn-text);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px dashed #7c2d12;
-            padding-bottom: 12px;
-        }
-
-        .modal-close-btn {
-            background: var(--border-dark);
-            border: 2px solid var(--warn-border);
-            color: var(--warn-text);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 12px;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-            transition: all 0.15s ease;
-        }
-
-        .modal-close-btn:hover {
-            background: var(--warn-border);
-            color: #fff;
-        }
-
-        .smartscreen-body {
-            font-size: 13px;
-            color: #ffedd5;
-            line-height: 1.6;
-        }
-
-        .smartscreen-steps {
-            background: rgba(0,0,0,0.35);
-            border: 1px solid var(--warn-border);
-            padding: 12px 16px;
-            margin-top: 8px;
-            font-size: 12px;
-        }
-
-        .smartscreen-steps ol {
-            margin-left: 18px;
-            margin-top: 6px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.92); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* --- ФИЧИ ЛАУНЧЕРА (Сетка) --- */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 3px solid var(--border-dark);
-            box-shadow: inset -3px -3px 0px var(--border-soft);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .feature-card h3 {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            color: var(--sage-primary);
-            text-transform: uppercase;
-            border-bottom: 2px dashed var(--border-soft);
-            padding-bottom: 8px;
-        }
-
-        .feature-card p {
-            font-size: 13px;
-            color: var(--text-dim);
-            line-height: 1.5;
-        }
-
-        /* --- ПОДВАЛ --- */
-        footer {
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            background: var(--bg-panel);
-            border-top: 4px solid var(--border-dark);
-            font-size: 11px;
-            color: var(--sage-muted);
-            font-family: 'Press Start 2P', monospace;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: center;
-        }
-
-        footer a {
-            color: var(--sage-primary);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-            header { padding: 16px; flex-direction: column; gap: 12px; }
-            .hero-title { font-size: 18px; }
-            .btn-download-main { font-size: 14px; padding: 16px 24px; width: 100%; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -437,13 +18,24 @@
     <div class="bg-gif"></div>
     <div class="bg-overlay"></div>
 
-    <!-- Верхняя шапка -->
+    <!-- Шапка -->
     <header>
         <div class="logo">
             <div class="pixel-logo-frame">⛏</div>
             APIARY SMP
         </div>
+
         <div class="header-right">
+            <!-- Переключатель тем -->
+            <div class="theme-switcher-box">
+                <span class="theme-label">ТЕМА:</span>
+                <div class="theme-switcher">
+                    <button class="theme-btn theme-green" data-theme="green" title="Лесная зелёная"></button>
+                    <button class="theme-btn theme-yellow" data-theme="yellow" title="Янтарная жёлтая"></button>
+                    <button class="theme-btn theme-pink" data-theme="pink" title="Неоновая розовая"></button>
+                </div>
+            </div>
+
             <a href="https://github.com/memassssssss/Apiary-launcher" target="_blank" class="btn-github">
                 💻 GITHUB
             </a>
@@ -451,70 +43,241 @@
         </div>
     </header>
 
-    <!-- Основной блок -->
+    <!-- Основной контент -->
     <main>
         
-        <div class="hero-card">
+        <!-- Hero Блок -->
+        <section class="hero-card">
+            <div class="hero-badge">OFFICIAL LAUNCHER</div>
             <h1 class="hero-title">APIARY LAUNCHER</h1>
             <p class="hero-subtitle">
-                Официальный кастомный лаунчер для комфортной игры на сервере Apiary SMP.
-                Быстрая установка сборок, встроенное управление Java и мягкий Soft Sage дизайн.
+                Кастомный, быстрый и удобный лаунчер, созданный специально для игроков сервера <strong>Apiary SMP</strong>. Забудь про мучения с файлами и ручной настройкой.
             </p>
 
             <!-- Ссылка на файл лаунчера -->
             <a href="https://github.com/memassssssss/Apiary-launcher/releases/download/v1.5.0/Apiary.Launcher.Setup.1.5.0.exe" id="downloadBtn" class="btn-download-main" download>
                 <span>СКАЧАТЬ ДЛЯ WINDOWS</span>
-                <span class="btn-subtext">Windows 10 / 11 (x64) • .exe</span>
+                <span class="btn-subtext">Windows 10 / 11 (x64) • Версия 1.5.0</span>
             </a>
 
             <!-- Счётчик скачиваний -->
             <div class="download-counter-box">
-                <span>СКАЧАНО:</span>
-                <span id="downloadCount" class="download-counter-val">---</span>
+                <span class="pulse-dot"></span>
+                <span>СКАЧАНО ИЗ GITHUB:</span>
+                <span id="downloadCount" class="download-counter-val">Загрузка...</span>
             </div>
 
-            <!-- Текстовая кнопка-ссылка для открытия всплывающего окна -->
             <button type="button" id="openSmartscreenModal" class="btn-smartscreen-trigger">
-                🛡️ Windows ругается при запуске?
+                🛡️ Windows блокирует запуск при скачивании?
             </button>
-        </div>
+        </section>
 
-        <!-- Карточки особенностей -->
-        <section class="features-grid">
+        <!-- Демонстрация интерфейса лаунчера (ИНТЕРАКТИВНАЯ) -->
+        <section class="preview-section">
+            <div class="section-header">
+                <h2>ИНТЕРФЕЙС ЛАУНЧЕРА</h2>
+                <p>Кликай по вкладкам и кнопкам прямо сейчас — это живой интерактивный макет!</p>
+            </div>
             
-            <div class="feature-card">
-                <h3>⚡ Автоподключение</h3>
-                <p>Все актуальные моды и сборки сервера обновляются и скачиваются автоматически в один клик.</p>
+            <div class="launcher-mockup" id="interactiveMockup">
+                <div class="mockup-header">
+                    <div class="mockup-dots">
+                        <button class="dot red" id="mockupDotClose" title="Закрыть"></button>
+                        <button class="dot yellow" id="mockupDotMin" title="Свернуть"></button>
+                        <button class="dot green" id="mockupDotMax" title="Развернуть"></button>
+                    </div>
+                    <div class="mockup-title" id="mockupTitle">Apiary Launcher v1.5.0 — Client</div>
+                </div>
+                <div class="mockup-body">
+                    <div class="mockup-sidebar">
+                        <button class="mockup-item active" data-tab="play">🎮 Играть</button>
+                        <button class="mockup-item" data-tab="mods">🧩 Моды</button>
+                        <button class="mockup-item" data-tab="themes">🎨 Темы</button>
+                        <button class="mockup-item" data-tab="settings">⚙️ Настройки</button>
+                    </div>
+                    <div class="mockup-main-content">
+                        
+                        <!-- Вкладка 1: ИГРАТЬ -->
+                        <div class="mockup-tab-content active" id="tab-play">
+                            <div class="mockup-status-card">
+                                <div class="mockup-status-top">
+                                    <span class="status-online">● СЕРВЕР ОНЛАЙН</span>
+                                    <span class="mockup-ping"> 9 ms</span>
+                                </div>
+                                <div class="mockup-server-name">Apiary Main SMP</div>
+                                <div class="mockup-server-info">Игроков онлайн: <strong>18/50</strong> • Версия 1.21.11</div>
+                            </div>
+
+                            <div class="mockup-launch-status" id="mockupLaunchStatus">
+                                Нажмите «ИГРАТЬ» для запуска сборки
+                            </div>
+
+                            <div class="mockup-play-bar">
+                                <div class="mockup-profile">
+                                    <span class="profile-label">Игрок:</span>
+                                    <input type="text" id="mockupNickInput" class="mockup-nick-input" value="Steve" maxlength="16" title="Нажмите, чтобы изменить ник" />
+                                </div>
+                                <button class="mockup-play-btn" id="mockupPlayBtn">ИГРАТЬ</button>
+                            </div>
+                        </div>
+
+                        <!-- Вкладка 2: МОДЫ -->
+                        <div class="mockup-tab-content" id="tab-mods">
+                            <div class="mockup-panel-title">МЕНЕДЖЕР МОДИФИКАЦИЙ</div>
+                            <div class="mockup-mods-list">
+                                <label class="mockup-mod-item">
+                                    <input type="checkbox" checked />
+                                    <span>Sodium & Lithium (FPS Boost)</span>
+                                </label>
+                                <label class="mockup-mod-item">
+                                    <input type="checkbox" checked />
+                                    <span>Iris Shaders</span>
+                                </label>
+                                <label class="mockup-mod-item">
+                                    <input type="checkbox" checked />
+                                    <span>Simple Voice Chat</span>
+                                </label>
+                                <label class="mockup-mod-item">
+                                    <input type="checkbox" />
+                                    <span>Apiary Minimap HUD</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Вкладка 3: ТЕМЫ -->
+                        <div class="mockup-tab-content" id="tab-themes">
+                            <div class="mockup-panel-title">ТЕМЫ ОФОРМЛЕНИЯ</div>
+                            <div class="mockup-theme-selector">
+                                <button class="mockup-theme-option active" data-mock-theme="green">🌿 Лесная Зелёная</button>
+                                <button class="mockup-theme-option" data-mock-theme="yellow">🍯 Янтарно-Жёлтая</button>
+                                <button class="mockup-theme-option" data-mock-theme="pink">🌸 Неоново-Розовая</button>
+                            </div>
+                        </div>
+
+                        <!-- Вкладка 4: НАСТРОЙКИ -->
+                        <div class="mockup-tab-content" id="tab-settings">
+                            <div class="mockup-panel-title">НАСТРОЙКИ КЛИЕНТА</div>
+                            <div class="mockup-setting-group">
+                                <div class="setting-label">Выделение ОЗУ: <strong id="ramVal">4 GB</strong></div>
+                                <input type="range" id="ramSlider" min="2" max="16" value="4" step="1" class="mockup-range" />
+                            </div>
+                            <div class="mockup-setting-group">
+                                <div class="setting-label">Версия Java:</div>
+                                <select class="mockup-select">
+                                    <option>Auto-Detect (Java 21)</option>
+                                    <option>Java 17 (LTS)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Почему именно Apiary Launcher (Ровно 3 карточки) -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2>ГЛАВНЫЕ ФИЧИ</h2>
+                <p>Всё самое необходимое для комфортной игры без лишнего мусора</p>
             </div>
 
-            <div class="feature-card">
-                <h3>☕ Smart Java</h3>
-                <p>Лаунчер сам подбирает правильную версию Java под каждую сборку Minecraft или позволяет указать свою.</p>
+            <div class="features-grid">
+                
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Игра в 1 клик</h3>
+                    <p>Лаунчер практически всё сделает за вас! Вам останется только наслаждаться игрой в кубы :)</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Моды & Smart Java</h3>
+                    <p>Управляй модами в клик и забудь про <code>%appdata%</code>. Лаунчер сам скачает правильную версию Java (8, 17 или 21).</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>100% Open Source</h3>
+                    <p>Полностью открытый исходный код на GitHub. Никаких скрытых майнеров, рекламы и лишних процессов.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ИНТЕРЕСНЫЙ БЛОК: ИНТЕРАКТИВНЫЙ ТЕРМИНАЛ APIARY -->
+        <section class="terminal-section">
+            <div class="section-header">
+                <h2>💻 ТЕРМИНАЛ APIARY CLI</h2>
+                <p>Интерактивная консоль управления. Вводи команды или нажимай на быструю подсказку ниже!</p>
             </div>
 
-            <div class="feature-card">
-                <h3>🌿 Open Source</h3>
-                <p>Код лаунчера полностью открыт на GitHub. Вы можете проверить безопасность каждого файла лично.</p>
+            <div class="terminal-box">
+                <div class="terminal-topbar">
+                    <span class="terminal-title">bash - apiary-cli -- 80x24</span>
+                    <button type="button" id="termClearBtn" class="term-clear-btn" title="Очистить терминал">🗑️ CLEAR</button>
+                </div>
+                <div class="terminal-body" id="terminalOutput">
+                    <div class="term-line system">> Система Apiary OS v1.5.0 готова к работе.</div>
+                    <div class="term-line system">> Введи <span class="term-highlight">help</span> для просмотра списка доступных команд.</div>
+                </div>
+                <div class="terminal-input-row">
+                    <span class="term-prompt">apiary@smp:~$</span>
+                    <input type="text" id="terminalInput" placeholder="Введи команду (help, status, ping, secret)..." autocomplete="off" />
+                    <button type="button" id="terminalSendBtn" class="term-send-btn">SEND</button>
+                </div>
+                <div class="terminal-chips">
+                    <button class="term-chip" data-cmd="help">/help</button>
+                    <button class="term-chip" data-cmd="status">/status</button>
+                    <button class="term-chip" data-cmd="ping">/ping</button>
+                    <button class="term-chip" data-cmd="mods">/mods</button>
+                    <button class="term-chip" data-cmd="secret">/secret</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Как начать играть (3 шага) -->
+        <section class="steps-section">
+            <div class="section-header">
+                <h2>КАК НАЧАТЬ ИГРАТЬ?</h2>
+                <p>Всего три простых шага отделяют тебя от погружения в игровой мир</p>
             </div>
 
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">01</div>
+                    <h3>Скачай файл</h3>
+                    <p>Загрузи установочный файл <code>.exe</code> по кнопке вверху страницы.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">02</div>
+                    <h3>Установи</h3>
+                    <p>Запусти инсталлятор и пройди быструю установку за пару секунд.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">03</div>
+                    <h3>Врывайся!</h3>
+                    <p>Введи свой ник, нажми «Играть» и наслаждайся.</p>
+                </div>
+            </div>
         </section>
 
     </main>
 
-    <!-- ВСПЛЫВАЮЩЕЕ ОКНО (SmartScreen Modal) -->
+    <!-- Модалка SmartScreen -->
     <div id="smartscreenModal" class="modal-overlay">
         <div class="smartscreen-modal-content">
             <div class="smartscreen-title">
-                <span>🛡️ Предупреждение SmartScreen</span>
+                <span>🛡 Предупреждение SmartScreen</span>
                 <button type="button" class="modal-close-btn" id="closeSmartscreenModal">✕</button>
             </div>
             <div class="smartscreen-body">
-                <p>При первом запуске Windows может показать синее окно защиты. Это происходит потому, что у независимых инди-приложений нет дорогого коммерческого цифрового сертификата издателя.</p>
+                <p>При первом запуске Windows может показать синее окно защиты. Это стандартная реакция системы на новые приложения без платного коммерческого сертификата.</p>
                 <div class="smartscreen-steps">
-                    <strong>Как запустить:</strong>
+                    <strong>Как запустить приложение:</strong>
                     <ol>
-                        <li>Нажмите синюю ссылку <strong>«Подробнее»</strong> в окне Windows.</li>
-                        <li>Нажмите появившуюся кнопку <strong>«Выполнить в любом случае»</strong>.</li>
+                        <li>Нажми на синюю ссылку <strong>«Подробнее»</strong> (More info) в окне предупреждения.</li>
+                        <li>Нажми появившуюся кнопку <strong>«Выполнить в любом случае»</strong> (Run anyway).</li>
                     </ol>
                 </div>
             </div>
@@ -523,116 +286,13 @@
 
     <!-- Подвал -->
     <footer>
-        <div>Launcher by MemASS</div>
-        <div><a href="https://github.com/memassssssss/Apiary-launcher" target="_blank">Исходный код на GitHub</a></div>
+        <div class="footer-title">APIARY SMP LAUNCHER</div>
+        <div class="footer-links">
+            Разработано <a href="https://github.com/memassssssss" target="_blank">MemASS</a> • 
+            <a href="https://github.com/memassssssss/Apiary-launcher" target="_blank">Исходный код на GitHub</a>
+        </div>
     </footer>
 
-    <!-- Скрипты -->
-    <script>
-        // --- Управление всплывающим окном SmartScreen ---
-        const modal = document.getElementById('smartscreenModal');
-        const openModalBtn = document.getElementById('openSmartscreenModal');
-        const closeModalBtn = document.getElementById('closeSmartscreenModal');
-
-        if (openModalBtn && modal) {
-            // Открытие по клику
-            openModalBtn.addEventListener('click', () => {
-                modal.classList.add('active');
-            });
-        }
-
-        if (closeModalBtn && modal) {
-            // Закрытие по крестику
-            closeModalBtn.addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-        }
-
-        if (modal) {
-            // Закрытие по клику вне окна
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
-        }
-
-        // Закрытие по нажатию Esc
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
-                modal.classList.remove('active');
-            }
-        });
-
-        // --- Счётчик скачиваний ---
-        const API_NAMESPACE = "apiary-smp-memass";
-        const API_KEY = "launcher-downloads-count";
-
-        const countEl = document.getElementById('downloadCount');
-        const dlBtn = document.getElementById('downloadBtn');
-
-        const COOLDOWN_TIME = 24 * 60 * 60 * 1000; 
-
-        function getLocalCount() {
-            return parseInt(localStorage.getItem('local_dl_count') || '1');
-        }
-
-        function updateUI(value) {
-            if (countEl) {
-                countEl.textContent = Number(value).toLocaleString('ru-RU') + " РАЗ";
-            }
-            localStorage.setItem('local_dl_count', value);
-        }
-
-        updateUI(getLocalCount());
-
-        async function fetchDownloadCount() {
-            try {
-                const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && typeof data.count === 'number') {
-                        updateUI(data.count);
-                    }
-                }
-            } catch (err) {
-                console.warn("Ошибка получения данных счётчика:", err);
-            }
-        }
-
-        async function incrementDownloadCount() {
-            const lastDownload = localStorage.getItem('last_dl_timestamp');
-            const now = Date.now();
-
-            if (lastDownload && (now - parseInt(lastDownload)) < COOLDOWN_TIME) {
-                console.log("Скачивание уже засчитано сегодня.");
-                return;
-            }
-
-            localStorage.setItem('last_dl_timestamp', now.toString());
-            updateUI(getLocalCount() + 1);
-
-            try {
-                const res = await fetch(`https://api.counterapi.dev/v1/${API_NAMESPACE}/${API_KEY}/up`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && typeof data.count === 'number') {
-                        updateUI(data.count);
-                    }
-                }
-            } catch (err) {
-                console.warn("Не удалось обновить счетчик на сервере:", err);
-            }
-        }
-
-        fetchDownloadCount();
-
-        if (dlBtn) {
-            dlBtn.addEventListener('click', () => {
-                incrementDownloadCount();
-            });
-        }
-    </script>
-
+    <script src="script.js" defer></script>
 </body>
 </html>
