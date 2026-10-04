@@ -109,13 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && lightboxModal && lightboxModal.classList.contains('active')) {
             lightboxModal.classList.remove('active');
         }
     });
 
-    setTheme(savedTheme);
+    // Исправляем вызов функции: передаем действующую переменную currentTheme
+    setTheme(currentTheme);
 
 
     // --- 3. ИНТЕРАКТИВНЫЙ КАЛЬКУЛЯТОР JVM ---
