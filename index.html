@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apiary Launcher — Твой идеальный старт на Apiary SMP</title>
+    <title>Apiary Launcher v2.1.0 — Официальный клиент Apiary SMP</title>
 
-    <!-- Пиксельные шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
@@ -14,54 +13,47 @@
 </head>
 <body>
 
-    <!-- Фоновая гифка и затемнение -->
     <div class="bg-gif"></div>
     <div class="bg-overlay"></div>
 
-    <!-- Шапка -->
     <header>
         <div class="logo">
-            <div class="pixel-logo-frame">⛏</div>
+            <div class="pixel-logo-frame">[A]</div>
             APIARY SMP
         </div>
 
         <div class="header-right">
-            <!-- Переключатель тем -->
             <div class="theme-switcher-box">
                 <span class="theme-label">ТЕМА:</span>
                 <div class="theme-switcher">
-                    <button class="theme-btn theme-green" data-theme="green" title="Лесная зелёная"></button>
-                    <button class="theme-btn theme-yellow" data-theme="yellow" title="Янтарная жёлтая"></button>
+                    <button class="theme-btn theme-green" data-theme="green" title="Лесная зеленая"></button>
+                    <button class="theme-btn theme-yellow" data-theme="yellow" title="Янтарная желтая"></button>
                     <button class="theme-btn theme-pink" data-theme="pink" title="Неоновая розовая"></button>
                 </div>
             </div>
 
             <a href="https://github.com/memassssssss/Apiary-launcher" target="_blank" class="btn-github">
-                💻 GITHUB
+                GITHUB
             </a>
-            <div class="version-badge">v2.0.0</div>
+            <div class="version-badge">v2.1.0</div>
         </div>
     </header>
 
-    <!-- Основной контент -->
     <main>
         
-        <!-- Hero Блок -->
+        <!-- Главный баннер -->
         <section class="hero-card">
-            <div class="hero-badge">OFFICIAL LAUNCHER</div>
+            <div class="hero-badge">ОБНОВЛЕНИЕ v2.1.0</div>
             <h1 class="hero-title">APIARY LAUNCHER</h1>
             <p class="hero-subtitle">
-                Кастомный, быстрый и удобный лаунчер, созданный специально для игроков сервера <strong>Apiary SMP</strong>. Забудь про мучения с файлами и ручной настройкой.
+                Кастомный десктопный клиент на базе Electron и Node.js, спроектированный специально для сервера Apiary. Полная изоляция сборок, встроенный каталог контента из Modrinth и CurseForge, автоматический менеджмент сред Java и низколатентный сборщик мусора ZGC.
             </p>
 
-            <!-- Ссылка на файл лаунчера -->
-            <!-- Ссылка на файл лаунчера -->
-<a href="https://github.com/memassssssss/Apiary-launcher/releases/download/v2.0.0/Apiary.Launcher.Setup.2.0.0.exe" id="downloadBtn" class="btn-download-main" download>
-    <span>СКАЧАТЬ ДЛЯ WINDOWS</span>
-    <span class="btn-subtext">Windows 10 / 11 (x64) • Версия 2.0.0</span>
-</a>
+            <a href="https://github.com/memassssssss/Apiary-launcher/releases/download/v2.1.0/Apiary.Launcher.Setup.2.1.0.exe" id="downloadBtn" class="btn-download-main" download>
+                <span>СКАЧАТЬ ДЛЯ WINDOWS</span>
+                <span class="btn-subtext" id="downloadSubtext">Windows 10 / 11 (x64) • Версия 2.1.0</span>
+            </a>
 
-            <!-- Счётчик скачиваний -->
             <div class="download-counter-box">
                 <span class="pulse-dot"></span>
                 <span>СКАЧАНО ИЗ GITHUB:</span>
@@ -69,225 +61,283 @@
             </div>
 
             <button type="button" id="openSmartscreenModal" class="btn-smartscreen-trigger">
-                🛡️ Windows блокирует запуск при скачивании?
+                Windows блокирует запуск при скачивании?
             </button>
         </section>
 
-        <!-- Демонстрация интерфейса лаунчера (ИНТЕРАКТИВНАЯ) -->
-        <section class="preview-section">
+<!-- Галерея скриншотов лаунчера (Сетка карточек с модальным просмотром) -->
+        <section class="screenshots-gallery-section">
             <div class="section-header">
-                <h2>ИНТЕРФЕЙС ЛАУНЧЕРА</h2>
-                <p>Кликай по вкладкам и кнопкам прямо сейчас — это живой интерактивный макет!</p>
+                <h2>ГАЛЕРЕЯ ИНТЕРФЕЙСА</h2>
+                <p>Нажмите на любой скриншот, чтобы открыть его в увеличенном окне в высоком разрешении</p>
             </div>
-            
-            <div class="launcher-mockup" id="interactiveMockup">
-                <div class="mockup-header">
-                    <div class="mockup-dots">
-                        <button class="dot red" id="mockupDotClose" title="Закрыть"></button>
-                        <button class="dot yellow" id="mockupDotMin" title="Свернуть"></button>
-                        <button class="dot green" id="mockupDotMax" title="Развернуть"></button>
+
+            <div class="gallery-grid" id="screenshotsGalleryGrid">
+                <!-- Карточки генерируются скриптом с учетом активной темы -->
+                <div class="gallery-item-card" data-shot="main">
+                    <div class="gallery-thumb-wrap">
+                        <img src="./screenshots/main.png" alt="Главный экран" onerror="this.classList.add('is-missing')">
+                        <div class="gallery-thumb-fallback">ГЛАВНЫЙ ЭКРАН</div>
                     </div>
-                    <div class="mockup-title" id="mockupTitle">Apiary Launcher v1.5.0 — Client</div>
+                    <div class="gallery-card-info">
+                        <span class="gallery-card-title">Главный экран</span>
+                        <span class="gallery-card-sub">Профили и сборки</span>
+                    </div>
                 </div>
-                <div class="mockup-body">
-                    <div class="mockup-sidebar">
-                        <button class="mockup-item active" data-tab="play">🎮 Играть</button>
-                        <button class="mockup-item" data-tab="mods">🧩 Моды</button>
-                        <button class="mockup-item" data-tab="themes">🎨 Темы</button>
-                        <button class="mockup-item" data-tab="settings">⚙️ Настройки</button>
+
+                <div class="gallery-item-card" data-shot="catalog">
+                    <div class="gallery-thumb-wrap">
+                        <img src="./screenshots/catalog.png" alt="Каталог контента" onerror="this.classList.add('is-missing')">
+                        <div class="gallery-thumb-fallback">КАТАЛОГ КОНТЕНТА</div>
                     </div>
-                    <div class="mockup-main-content">
-                        
-                        <!-- Вкладка 1: ИГРАТЬ -->
-                        <div class="mockup-tab-content active" id="tab-play">
-                            <div class="mockup-status-card">
-                                <div class="mockup-status-top">
-                                    <span class="status-online">● СЕРВЕР ОНЛАЙН</span>
-                                    <span class="mockup-ping"> 9 ms</span>
-                                </div>
-                                <div class="mockup-server-name">Apiary Main SMP</div>
-                                <div class="mockup-server-info">Игроков онлайн: <strong>18/50</strong> • Версия 1.21.11</div>
-                            </div>
+                    <div class="gallery-card-info">
+                        <span class="gallery-card-title">Каталог контента</span>
+                        <span class="gallery-card-sub">Modrinth & CurseForge</span>
+                    </div>
+                </div>
 
-                            <div class="mockup-launch-status" id="mockupLaunchStatus">
-                                Нажмите «ИГРАТЬ» для запуска сборки
-                            </div>
+                <div class="gallery-item-card" data-shot="gallery">
+                    <div class="gallery-thumb-wrap">
+                        <img src="./screenshots/gallery.png" alt="Галерея скриншотов" onerror="this.classList.add('is-missing')">
+                        <div class="gallery-thumb-fallback">ГАЛЕРЕЯ СКРИНШОТОВ</div>
+                    </div>
+                    <div class="gallery-card-info">
+                        <span class="gallery-card-title">Галерея скриншотов</span>
+                        <span class="gallery-card-sub">Просмотр и буфер</span>
+                    </div>
+                </div>
 
-                            <div class="mockup-play-bar">
-                                <div class="mockup-profile">
-                                    <span class="profile-label">Игрок:</span>
-                                    <input type="text" id="mockupNickInput" class="mockup-nick-input" value="Steve" maxlength="16" title="Нажмите, чтобы изменить ник" />
-                                </div>
-                                <button class="mockup-play-btn" id="mockupPlayBtn">ИГРАТЬ</button>
-                            </div>
-                        </div>
+                <div class="gallery-item-card" data-shot="themes">
+                    <div class="gallery-thumb-wrap">
+                        <img src="./screenshots/themes.png" alt="Редактор тем" onerror="this.classList.add('is-missing')">
+                        <div class="gallery-thumb-fallback">РЕДАКТОР ТЕМ</div>
+                    </div>
+                    <div class="gallery-card-info">
+                        <span class="gallery-card-title">Редактор тем</span>
+                        <span class="gallery-card-sub">Пресеты и палитры</span>
+                    </div>
+                </div>
 
-                        <!-- Вкладка 2: МОДЫ -->
-                        <div class="mockup-tab-content" id="tab-mods">
-                            <div class="mockup-panel-title">МЕНЕДЖЕР МОДИФИКАЦИЙ</div>
-                            <div class="mockup-mods-list">
-                                <label class="mockup-mod-item">
-                                    <input type="checkbox" checked />
-                                    <span>Sodium & Lithium (FPS Boost)</span>
-                                </label>
-                                <label class="mockup-mod-item">
-                                    <input type="checkbox" checked />
-                                    <span>Iris Shaders</span>
-                                </label>
-                                <label class="mockup-mod-item">
-                                    <input type="checkbox" checked />
-                                    <span>Simple Voice Chat</span>
-                                </label>
-                                <label class="mockup-mod-item">
-                                    <input type="checkbox" />
-                                    <span>Apiary Minimap HUD</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Вкладка 3: ТЕМЫ -->
-                        <div class="mockup-tab-content" id="tab-themes">
-                            <div class="mockup-panel-title">ТЕМЫ ОФОРМЛЕНИЯ</div>
-                            <div class="mockup-theme-selector">
-                                <button class="mockup-theme-option active" data-mock-theme="green">🌿 Лесная Зелёная</button>
-                                <button class="mockup-theme-option" data-mock-theme="yellow">🍯 Янтарно-Жёлтая</button>
-                                <button class="mockup-theme-option" data-mock-theme="pink">🌸 Неоново-Розовая</button>
-                            </div>
-                        </div>
-
-                        <!-- Вкладка 4: НАСТРОЙКИ -->
-                        <div class="mockup-tab-content" id="tab-settings">
-                            <div class="mockup-panel-title">НАСТРОЙКИ КЛИЕНТА</div>
-                            <div class="mockup-setting-group">
-                                <div class="setting-label">Выделение ОЗУ: <strong id="ramVal">4 GB</strong></div>
-                                <input type="range" id="ramSlider" min="2" max="16" value="4" step="1" class="mockup-range" />
-                            </div>
-                            <div class="mockup-setting-group">
-                                <div class="setting-label">Версия Java:</div>
-                                <select class="mockup-select">
-                                    <option>Auto-Detect (Java 21)</option>
-                                    <option>Java 17 (LTS)</option>
-                                </select>
-                            </div>
-                        </div>
-
+                <div class="gallery-item-card" data-shot="loaders">
+                    <div class="gallery-thumb-wrap">
+                        <img src="./screenshots/loaders.png" alt="Выбор загрузчиков" onerror="this.classList.add('is-missing')">
+                        <div class="gallery-thumb-fallback">ВЫБОР ЗАГРУЗЧИКОВ</div>
+                    </div>
+                    <div class="gallery-card-info">
+                        <span class="gallery-card-title">Выбор загрузчиков</span>
+                        <span class="gallery-card-sub">Forge, NeoForge, Quilt</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Почему именно Apiary Launcher (Ровно 3 карточки) -->
-        <section class="features-section">
+        <!-- Подробная информация об архитектуре -->
+        <section class="story-section">
             <div class="section-header">
-                <h2>ГЛАВНЫЕ ФИЧИ</h2>
-                <p>Всё самое необходимое для комфортной игры без лишнего мусора</p>
+                <h2>АРХИТЕКТУРА И ТЕХНИЧЕСКИЕ РЕШЕНИЯ</h2>
+                <p>Как устроен лаунчер под капотом и почему он работает стабильно</p>
             </div>
 
-            <div class="features-grid">
-                
-                <div class="feature-card">
-                    <div class="feature-icon"></div>
-                    <h3>Игра в 1 клик</h3>
-                    <p>Лаунчер практически всё сделает за вас! Вам останется только наслаждаться игрой в кубы :)</p>
+            <div class="story-grid">
+                <div class="story-card">
+                    <h3>Изоляция сред выполнения</h3>
+                    <p>
+                        В отличие от стандартных лаунчеров, складывающих все в общий <code>%appdata%/.minecraft</code>, Apiary Launcher монтирует для каждого профиля собственный изолированный каталог <code>--gameDir</code>. Конфигурации, моды, шейдеры и карты версий 1.12.2, 1.20.1 и 1.21.1 физически не пересекаются и не затирают настройки друг друга.
+                    </p>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon"></div>
-                    <h3>Моды & Smart Java</h3>
-                    <p>Управляй модами в клик и забудь про <code>%appdata%</code>. Лаунчер сам скачает правильную версию Java (8, 17 или 21).</p>
+                <div class="story-card">
+                    <h3>Безопасный менеджмент токенов</h3>
+                    <p>
+                        Авторизация Microsoft реализована через защищенный модуль с использованием библиотеки Electron <code>safeStorage</code>. Токены доступа шифруются системным криптографическим хранилищем Windows DPAPI перед записью в локальный конфиг и никогда не передаются на сторонние серверы.
+                    </p>
                 </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon"></div>
-                    <h3>100% Open Source</h3>
-                    <p>Полностью открытый исходный код на GitHub. Никаких скрытых майнеров, рекламы и лишних процессов.</p>
+                <div class="story-card">
+                    <h3>Собственный сетевой стек</h3>
+                    <p>
+                        Все запросы к Modrinth, CurseForge и Adoptium API обрабатываются через Chromium Network Service (модуль <code>net.fetch</code>). Это гарантирует автоматическую поддержку сжатия gzip/brotli, корректную работу через системные прокси и отсутствие зависаний сетевых сокетов при поиске контента.
+                    </p>
                 </div>
 
+                <div class="story-card">
+                    <h3>Отказоустойчивый запуск</h3>
+                    <p>
+                        Дочерний процесс JVM запускается с контролем кодов выхода. Если игра завершается сбоем, лаунчер считывает последние строки буфера, определяет первопричину (нехватка памяти, сбой видеодрайвера OpenGL, битые Mixin-классы) и выводит понятную диагностику на русском языке.
+                    </p>
+                </div>
             </div>
         </section>
 
-        <!-- ИНТЕРЕСНЫЙ БЛОК: ИНТЕРАКТИВНЫЙ ТЕРМИНАЛ APIARY -->
+        <!-- Интерактивный калькулятор памяти и JVM -->
+        <section class="ram-calculator-section">
+            <div class="section-header">
+                <h2>ИНТЕРАКТИВНЫЙ КАЛЬКУЛЯТОР JVM</h2>
+                <p>Настройте параметры вашей системы для расчета оптимальной конфигурации лаунчера</p>
+            </div>
+
+            <div class="calc-box">
+                <div class="calc-inputs-grid">
+                    <div class="calc-group">
+                        <label>Всего ОЗУ на компьютере: <strong id="calcTotalRamVal">16 ГБ</strong></label>
+                        <input type="range" id="calcTotalRamInput" min="4" max="64" step="2" value="16" class="mockup-range">
+                    </div>
+
+                    <div class="calc-group">
+                        <label>Тип сборки:</label>
+                        <select id="calcProfileType" class="calc-select">
+                            <option value="vanilla">Ванильный клиент / Легкие моды</option>
+                            <option value="shaders" selected>Оптимизация + Шейдеры (Iris / Sodium)</option>
+                            <option value="heavy">Тяжелый модпак (100+ модов / Distant Horizons)</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-group">
+                        <label>Версия игры:</label>
+                        <select id="calcMcVersion" class="calc-select">
+                            <option value="legacy">Minecraft 1.7.10 — 1.16.5</option>
+                            <option value="modern">Minecraft 1.17 — 1.20.4</option>
+                            <option value="nextgen" selected>Minecraft 1.20.5 — 1.21+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-result-panel">
+                    <div class="calc-metrics">
+                        <div class="metric-card">
+                            <span class="metric-title">РЕКОМЕНДУЕМАЯ ПАМЯТЬ (-Xmx)</span>
+                            <span class="metric-val" id="calcResultXmx">6.0 ГБ</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-title">ТРЕБУЕМАЯ JAVA JRE</span>
+                            <span class="metric-val" id="calcResultJava">Java 21 LTS</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-title">АЛГОРИТМ СБОРЩИКА МУСОРА</span>
+                            <span class="metric-val" id="calcResultGc">ZGC Generational</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-cmd-preview">
+                        <span class="calc-cmd-title">ГЕНЕРИРУЕМАЯ СТРОКА АРГУМЕНТОВ:</span>
+                        <code id="calcResultArgs">-XX:+UseZGC -XX:+ZGenerational -Xmx6144M -Xms1024M -XX:+AlwaysPreTouch</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Инспектор файловой изоляции -->
+        <section class="fs-inspector-section">
+            <div class="section-header">
+                <h2>СТРУКТУРА КАТАЛОГОВ КЛИЕНТА</h2>
+                <p>Нажимайте на папки дерева, чтобы посмотреть их назначение и способ изоляции</p>
+            </div>
+
+            <div class="fs-box">
+                <div class="fs-tree">
+                    <div class="fs-node root">.apiary-launcher/</div>
+                    <div class="fs-node item" data-info="runtime">├── runtime/ (Изолированные JRE 8, 17, 21)</div>
+                    <div class="fs-node item active" data-info="instances">├── instances/ (Все сборки и профили)</div>
+                    <div class="fs-node sub-item" data-info="instance-dir">│   └── [Имя сборки]/minecraft/</div>
+                    <div class="fs-node sub-sub-item" data-info="mods">│       ├── mods/ (Модификации сборки)</div>
+                    <div class="fs-node sub-sub-item" data-info="shaderpacks">│       ├── shaderpacks/ (Шейдерные пакеты)</div>
+                    <div class="fs-node sub-sub-item" data-info="resourcepacks">│       ├── resourcepacks/ (Текстур-паки)</div>
+                    <div class="fs-node sub-sub-item" data-info="screenshots">│       └── screenshots/ (Снимки экрана F2)</div>
+                    <div class="fs-node item" data-info="versions">└── versions/ (Манифесты ядер и загрузчиков)</div>
+                </div>
+
+                <div class="fs-info-panel">
+                    <span class="fs-info-title" id="fsInfoTitle">Каталог instances/</span>
+                    <p class="fs-info-text" id="fsInfoText">
+                        Каждая сборка создается в собственном изолированном каталоге. Моды, шейдеры и конфиги одной версии никогда не смешиваются с файлами других сборок.
+                    </p>
+                    <div class="fs-info-tag" id="fsInfoTag">Изоляция рабочих пространств</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Интерактивный CLI терминал -->
         <section class="terminal-section">
             <div class="section-header">
-                <h2>💻 ТЕРМИНАЛ APIARY CLI</h2>
-                <p>Интерактивная консоль управления. Вводи команды или нажимай на быструю подсказку ниже!</p>
+                <h2>ТЕРМИНАЛ APIARY CLI</h2>
+                <p>Интерактивная консоль управления. Вводите команды или нажимайте на подсказки</p>
             </div>
 
             <div class="terminal-box">
                 <div class="terminal-topbar">
                     <span class="terminal-title">bash - apiary-cli -- 80x24</span>
-                    <button type="button" id="termClearBtn" class="term-clear-btn" title="Очистить терминал">🗑️ CLEAR</button>
+                    <button type="button" id="termClearBtn" class="term-clear-btn">ОЧИСТИТЬ</button>
                 </div>
                 <div class="terminal-body" id="terminalOutput">
-                    <div class="term-line system">> Система Apiary OS v1.5.0 готова к работе.</div>
-                    <div class="term-line system">> Введи <span class="term-highlight">help</span> для просмотра списка доступных команд.</div>
+                    <div class="term-line system">> Система Apiary OS v2.1.0 готова к работе.</div>
+                    <div class="term-line system">> Введите команду help для просмотра списка доступных инструкций.</div>
                 </div>
                 <div class="terminal-input-row">
                     <span class="term-prompt">apiary@smp:~$</span>
-                    <input type="text" id="terminalInput" placeholder="Введи команду (help, status, ping, secret)..." autocomplete="off" />
-                    <button type="button" id="terminalSendBtn" class="term-send-btn">SEND</button>
+                    <input type="text" id="terminalInput" placeholder="Введите команду (help, status, ping, mods, zgc)..." autocomplete="off" />
+                    <button type="button" id="terminalSendBtn" class="term-send-btn">ВВОД</button>
                 </div>
                 <div class="terminal-chips">
                     <button class="term-chip" data-cmd="help">/help</button>
                     <button class="term-chip" data-cmd="status">/status</button>
                     <button class="term-chip" data-cmd="ping">/ping</button>
                     <button class="term-chip" data-cmd="mods">/mods</button>
-                    <button class="term-chip" data-cmd="secret">/secret</button>
+                    <button class="term-chip" data-cmd="zgc">/zgc</button>
+                    <button class="term-chip" data-cmd="about">/about</button>
                 </div>
             </div>
         </section>
 
-        <!-- Как начать играть (3 шага) -->
+        <!-- Пошаговое руководство -->
         <section class="steps-section">
             <div class="section-header">
-                <h2>КАК НАЧАТЬ ИГРАТЬ?</h2>
-                <p>Всего три простых шага отделяют тебя от погружения в игровой мир</p>
+                <h2>ПОРЯДОК УСТАНОВКИ</h2>
+                <p>Три простых шага для начала игры</p>
             </div>
 
             <div class="steps-grid">
                 <div class="step-card">
                     <div class="step-num">01</div>
-                    <h3>Скачай файл</h3>
-                    <p>Загрузи установочный файл <code>.exe</code> по кнопке вверху страницы.</p>
+                    <h3>Скачайте установщик</h3>
+                    <p>Загрузите актуальный исполняемый файл Setup версии 2.1.0 с официального репозитория GitHub.</p>
                 </div>
                 <div class="step-card">
                     <div class="step-num">02</div>
-                    <h3>Установи</h3>
-                    <p>Запусти инсталлятор и пройди быструю установку за пару секунд.</p>
+                    <h3>Произведите установку</h3>
+                    <p>Запустите инсталлятор и выберите удобную директорию на SSD-накопителе для быстрой загрузки ассетов.</p>
                 </div>
                 <div class="step-card">
                     <div class="step-num">03</div>
-                    <h3>Врывайся!</h3>
-                    <p>Введи свой ник, нажми «Играть» и наслаждайся.</p>
+                    <h3>Выберите сборку</h3>
+                    <p>Задайте никнейм, выберите нужную версию Minecraft и нажмите кнопку запуска. Лаунчер автоматически подготовит окружение.</p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Модалка SmartScreen -->
+    <!-- Модальное окно SmartScreen -->
     <div id="smartscreenModal" class="modal-overlay">
         <div class="smartscreen-modal-content">
             <div class="smartscreen-title">
-                <span>🛡 Предупреждение SmartScreen</span>
-                <button type="button" class="modal-close-btn" id="closeSmartscreenModal">✕</button>
+                <span>Предупреждение Windows SmartScreen</span>
+                <button type="button" class="modal-close-btn" id="closeSmartscreenModal">X</button>
             </div>
             <div class="smartscreen-body">
-                <p>При первом запуске Windows может показать синее окно защиты. Это стандартная реакция системы на новые приложения без платного коммерческого сертификата.</p>
+                <p>При первом запуске операционная система Windows может показать синее окно защиты. Это стандартное поведение фильтра SmartScreen для новых исполняемых файлов без платного корпоративного сертификата подписи кода.</p>
                 <div class="smartscreen-steps">
-                    <strong>Как запустить приложение:</strong>
+                    <strong>Инструкция по запуску:</strong>
                     <ol>
-                        <li>Нажми на синюю ссылку <strong>«Подробнее»</strong> (More info) в окне предупреждения.</li>
-                        <li>Нажми появившуюся кнопку <strong>«Выполнить в любом случае»</strong> (Run anyway).</li>
+                        <li>Нажмите на текстовую ссылку <strong>«Подробнее»</strong> (More info) в окне предупреждения.</li>
+                        <li>Нажмите появившуюся кнопку <strong>«Выполнить в любом случае»</strong> (Run anyway).</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Подвал -->
     <footer>
-        <div class="footer-title">APIARY SMP LAUNCHER</div>
+        <div class="footer-title">APIARY SMP LAUNCHER v2.1.0</div>
         <div class="footer-links">
             Разработано <a href="https://github.com/memassssssss" target="_blank">MemASS</a> • 
             <a href="https://github.com/memassssssss/Apiary-launcher" target="_blank">Исходный код на GitHub</a>
@@ -295,5 +345,20 @@
     </footer>
 
     <script src="script.js" defer></script>
+
+<!-- Модальное окно для полноэкранного просмотра скриншота -->
+    <div id="imageLightboxModal" class="lightbox-overlay">
+        <div class="lightbox-window">
+            <div class="lightbox-header">
+                <span class="lightbox-title" id="lightboxTitle">Просмотр скриншота</span>
+                <button type="button" class="modal-close-btn" id="lightboxCloseBtn">X</button>
+            </div>
+            <div class="lightbox-body">
+                <img id="lightboxImage" src="" alt="Увеличенный скриншот">
+                <p class="lightbox-desc" id="lightboxDesc"></p>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
