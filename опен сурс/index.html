@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Apiary Launcher v2.1.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="launcher-wrapper">
+        <main class="art-section" id="artSection" style="background-image: url('./bac.gif');">
+            <header>
+                <!-- Логотип без версии -->
+                <div class="logo">
+                    APIARY LAUNCHER
+                </div>
+            </header>
+
+            <button class="sidebar-toggle-btn" id="toggleSidebarBtn" title="Свернуть / Развернуть панель">►</button>
+
+            <div class="art-overlay-info">
+                <h1>APIARY</h1>
+                <p id="quoteDisplay">Возвращайся домой, пчёлка.</p>
+            </div>
+        </main>
+
+        <aside class="ui-sidebar" id="uiSidebar">
+            <div class="sidebar-scrollable">
+                <div class="section-block">
+                    <h2>Профиль</h2>
+                    
+                    <div class="form-group">
+                        <label for="accountTypeSelect">Тип аккаунта</label>
+                        <select id="accountTypeSelect">
+                            <option value="offline">Пиратский (Offline)</option>
+                            <option value="microsoft">Microsoft (Лицензия)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select id="accountSelect"></select>
+                    </div>
+
+                    <div class="row" id="offlineAddRow">
+                        <input type="text" id="newNickInput" placeholder="Новый ник">
+                        <button class="btn-action" id="addNickBtn">+ Добавить</button>
+                    </div>
+
+                    <div class="form-group" id="msAuthRow" style="display: none;">
+                        <button class="btn-action" id="msLoginBtn" style="background: var(--sage-primary); color: #000;">Войти через Microsoft</button>
+                    </div>
+
+                    <button class="btn-action btn-danger" id="removeNickBtn">Удалить профиль</button>
+                </div>
+
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Сборки</h2>
+                        <!-- Кнопки одинаковой высоты -->
+                        <div class="header-actions">
+                            <button class="btn-action header-btn" id="openScreenshotsBtn" title="Галерея скриншотов сборки">📸 Скрины</button>
+                            <button class="btn-action header-btn" id="openModManagerBtn" title="Каталог контента">🧩 Контент</button>
+                            <button class="btn-action header-btn" id="toggleAddInstanceBtn" title="Создать сборку">+ Создать</button>
+                        </div>
+                    </div>
+
+                    <div class="instances-grid" id="instancesGrid"></div>
+
+                    <div id="addInstanceBlock" class="modal-box" style="display: none;">
+                        <div class="form-group">
+                            <input type="text" id="newInstanceName" placeholder="Имя (напр: BeeCraft)">
+                        </div>
+                        <div class="form-group">
+                            <select id="versionSelect"></select>
+                        </div>
+                        <div class="form-group">
+                            <select id="loaderSelect">
+                                <option value="vanilla">Vanilla</option>
+                                <option value="fabric">Fabric</option>
+                                <option value="quilt">Quilt</option>
+                                <option value="forge">Forge</option>
+                                <option value="neoforge">NeoForge</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <button class="btn-action" id="createInstanceBtn" style="background: var(--sage-primary); color: #000;">Создать</button>
+                            <button class="btn-action" id="cancelInstanceBtn">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Настройки</h2>
+                        <button class="btn-action" id="openThemeEditorBtn">🎨 Тема</button>
+                    </div>
+                    <div class="form-group">
+                        <div class="ram-info">
+                            <span style="color: var(--text-dim);">ОЗУ:</span>
+                            <span id="ramValue">4.0 ГБ</span>
+                        </div>
+                        <input type="range" id="ramRange" min="1" max="16" step="0.5" value="4">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="javaTypeSelect">Использование Java</label>
+                        <select id="javaTypeSelect">
+                            <option value="auto">Автоматически</option>
+                            <option value="custom">Свой путь</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="javaCustomGroup" style="display: none;">
+                        <div class="row">
+                            <input type="text" id="javaCustomPathInput" placeholder="C:\...\javaw.exe">
+                            <button class="btn-action" id="browseJavaBtn">Обзор</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+                        <h2 style="margin:0; border:none; padding:0;">Консоль</h2>
+                        <button class="btn-action" id="clearConsoleBtn">Очистить</button>
+                    </div>
+                    <div class="console-box" id="consoleBox"></div>
+                </div>
+            </div>
+
+            <div class="sidebar-sticky-bottom">
+                <div>
+                    <div class="status-text" id="statusBox">Ожидание действий...</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <button class="btn-play" id="playBtn">ИГРАТЬ</button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Модальное окно каталога контента с сегментированными чипами -->
+    <div id="modManagerModal" class="modal-overlay" style="display: none;">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>🧩 Каталог контента — </span>
+                    <span id="modManagerInstanceName" style="color: var(--text-main);">...</span>
+                    <span id="modManagerInstanceDetails" style="font-size: 8px; color: var(--sage-muted); margin-left: 6px;">()</span>
+                </div>
+                <button id="closeModManagerBtn" class="modal-close-btn">X</button>
+            </div>
+
+            <div class="catalog-toolbar">
+                <div class="modal-tabs">
+                    <button id="tabSearchMods" class="tab-btn active">Поиск</button>
+                    <button id="tabInstalledMods" class="tab-btn">Установленные</button>
+                </div>
+
+                <!-- Сегментированные переключатели вместо мелких селектов -->
+                <div class="catalog-filters">
+                    <div class="segmented-control" id="contentTypeGroup">
+                        <button class="segmented-btn active" data-type="mod">🧩 Моды</button>
+                        <button class="segmented-btn" data-type="shader">✨ Шейдеры</button>
+                        <button class="segmented-btn" data-type="resourcepack">🎨 Текстуры</button>
+                    </div>
+
+                    <div class="segmented-control" id="contentSourceWrapper">
+                        <button class="segmented-btn active" data-source="modrinth">Modrinth</button>
+                        <button class="segmented-btn" data-source="curseforge">CurseForge</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div id="modSearchTabContent" style="display: flex; flex-direction: column; gap: 14px;">
+                    <div class="mod-search-bar">
+                        <input type="text" id="modSearchInput" placeholder="Поиск (напр: Sodium, Complementary, Faithful)...">
+                        <button id="modSearchBtn" class="btn-action" style="background: var(--sage-primary); color: #000;">Найти</button>
+                    </div>
+                    <div id="modSearchResults" class="mods-list-grid"></div>
+                </div>
+                <div id="modInstalledTabContent" style="display: none; flex-direction: column; gap: 14px;">
+                    <div id="installedModsList" class="mods-list-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно галереи скриншотов -->
+    <div id="screenshotsModal" class="modal-overlay" style="display: none;">
+        <div class="modal-window" style="width: 920px; height: 680px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>📸 Скриншоты сборки — </span>
+                    <span id="screenshotsInstanceName" style="color: var(--text-main);">...</span>
+                </div>
+                <button id="closeScreenshotsBtn" class="modal-close-btn">X</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <div id="screenshotsGrid" class="screenshots-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактора темы и пресетов со всеми 14 цветами -->
+    <div id="themeEditorModal" class="modal-overlay" style="display: none;">
+        <div class="modal-window" style="width: 660px; height: 660px; max-height: 90vh;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>🎨 Редактор и пресеты тем</span>
+                </div>
+                <button id="closeThemeEditorBtn" class="modal-close-btn">X</button>
+            </div>
+            <div class="modal-body" style="gap: 14px; overflow-y: auto;">
+                
+                <h2>Пресеты тем</h2>
+                <div class="modal-box" style="margin-top: 0;">
+                    <div class="form-group">
+                        <label>Выбор готового пресета</label>
+                        <div class="row">
+                            <select id="presetSelect" style="flex: 2;"></select>
+                            <button class="btn-action" id="applyPresetBtn" style="background: var(--sage-primary); color: #000;">Применить</button>
+                            <button class="btn-action btn-danger" id="deletePresetBtn" style="display:none;">Удалить</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 6px;">
+                        <label>Сохранить текущую палитру как пресет</label>
+                        <div class="row">
+                            <input type="text" id="newPresetNameInput" placeholder="Название пресета (напр. CyberNeon)">
+                            <button class="btn-action" id="savePresetBtn">+ Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Текст и Оформление</h2>
+                <div class="form-group">
+                    <label>Цитата (под заголовком)</label>
+                    <input type="text" id="quoteTextInput" placeholder="Оставьте пустым, чтобы убрать">
+                </div>
+                <div class="form-group">
+                    <label>Фоновое изображение (URL или путь)</label>
+                    <div class="row">
+                        <input type="text" id="bgImageUrlInput" placeholder="./bac.gif">
+                        <button class="btn-action" id="browseBgBtn">Обзор</button>
+                    </div>
+                </div>
+                
+                <h2>Фон и Панели</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Фон приложения (--bg-dark)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgDark"><input type="text" id="text_bgDark">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Градиент арта (--art-overlay)</label>
+                        <div class="row">
+                            <input type="color" id="color_artOverlay"><input type="text" id="text_artOverlay">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Боковая панель (--bg-panel)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgPanel"><input type="text" id="text_bgPanel">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Карточки / Блоки (--bg-card)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgCard"><input type="text" id="text_bgCard">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Поля ввода (--bg-input)</label>
+                        <div class="row">
+                            <input type="color" id="color_bgInput"><input type="text" id="text_bgInput">
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Акценты и Кнопки</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Основной акцент (--sage-primary)</label>
+                        <div class="row">
+                            <input type="color" id="color_sagePrimary"><input type="text" id="text_sagePrimary">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Наведение (--sage-hover)</label>
+                        <div class="row">
+                            <input type="color" id="color_sageHover"><input type="text" id="text_sageHover">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Темный акцент (--sage-dark)</label>
+                        <div class="row">
+                            <input type="color" id="color_sageDark"><input type="text" id="text_sageDark">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Опасность (--danger)</label>
+                        <div class="row">
+                            <input type="color" id="color_danger"><input type="text" id="text_danger">
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Границы и Текст</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Темная рамка (--border-dark)</label>
+                        <div class="row">
+                            <input type="color" id="color_borderDark"><input type="text" id="text_borderDark">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Мягкая рамка (--border-soft)</label>
+                        <div class="row">
+                            <input type="color" id="color_borderSoft"><input type="text" id="text_borderSoft">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Основной текст (--text-main)</label>
+                        <div class="row">
+                            <input type="color" id="color_textMain"><input type="text" id="text_textMain">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Вторичный текст (--text-dim)</label>
+                        <div class="row">
+                            <input type="color" id="color_textDim"><input type="text" id="text_textDim">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="justify-content: flex-end; margin-top: 14px;">
+                    <button class="btn-action" id="resetThemeBtn" style="margin-right: auto;">Сбросить цвета</button>
+                    <button class="btn-action btn-danger" id="cancelThemeBtn">Отмена</button>
+                    <button class="btn-action" id="saveThemeBtn" style="background: var(--sage-primary); color: #000;">Применить и Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

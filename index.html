@@ -7,7 +7,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
 </head>
@@ -46,7 +46,7 @@
             <div class="hero-badge">ОБНОВЛЕНИЕ v2.1.0</div>
             <h1 class="hero-title">APIARY LAUNCHER</h1>
             <p class="hero-subtitle">
-                Кастомный десктопный клиент на базе Electron и Node.js, спроектированный специально для сервера Apiary. Полная изоляция сборок, встроенный каталог контента из Modrinth и CurseForge, автоматический менеджмент сред Java и низколатентный сборщик мусора ZGC.
+                Кастомный десктопный клиент на базе Electron и Node.js, спроектированный специально для сервера Apiary. Полная изоляция сборок, встроенный каталог контента из Modrinth, автоматический менеджмент сред Java и низколатентный сборщик мусора ZGC.
             </p>
 
             <a href="https://github.com/memassssssss/Apiary-launcher/releases/download/v2.1.0/Apiary.Launcher.Setup.2.1.0.exe" id="downloadBtn" class="btn-download-main" download>
@@ -65,106 +65,227 @@
             </button>
         </section>
 
-<!-- Галерея скриншотов лаунчера (Сетка карточек с модальным просмотром) -->
-        <section class="screenshots-gallery-section">
+        <!-- ЧИСТАЯ ГАЛЕРЕЯ БЕЗ ЗАТЕМНЕНИЙ -->
+        <section class="gallery-monitor-section">
             <div class="section-header">
-                <h2>ГАЛЕРЕЯ ИНТЕРФЕЙСА</h2>
-                <p>Нажмите на любой скриншот, чтобы открыть его в увеличенном окне в высоком разрешении</p>
+                <h2>ИНТЕРФЕЙС И МОДУЛИ КЛИЕНТА</h2>
+                <p>Кликайте по вкладкам справа, чтобы изучить экраны лаунчера. Клик по скриншоту открывает полноэкранный зум.</p>
             </div>
 
-            <div class="gallery-grid" id="screenshotsGalleryGrid">
-                <!-- Карточки генерируются скриптом с учетом активной темы -->
-                <div class="gallery-item-card" data-shot="main">
-                    <div class="gallery-thumb-wrap">
-                        <img src="./screenshots/main.png" alt="Главный экран" onerror="this.classList.add('is-missing')">
-                        <div class="gallery-thumb-fallback">ГЛАВНЫЙ ЭКРАН</div>
+            <div class="monitor-container">
+                <div class="monitor-screen-wrapper">
+                    <div class="monitor-toolbar">
+                        <div class="monitor-toolbar-title">
+                            <span class="status-indicator"></span>
+                            <span id="monitorHudTitle">МОДУЛЬ: ГЛАВНЫЙ ЭКРАН</span>
+                        </div>
+                        <div class="monitor-toolbar-actions">
+                            <button id="btnToggleCrt" class="tool-btn" title="Переключить CRT-стилизацию">CRT: ВЫКЛ</button>
+                            <button id="btnEnlargeScreenshot" class="tool-btn primary">[ ZOOM 100% ]</button>
+                        </div>
                     </div>
-                    <div class="gallery-card-info">
-                        <span class="gallery-card-title">Главный экран</span>
-                        <span class="gallery-card-sub">Профили и сборки</span>
+
+                    <div class="monitor-viewport" id="monitorViewport">
+                        <img id="monitorMainImage" src="./screenshots/green/main.png" alt="Скриншот интерфейса">
+                        <div class="monitor-scanlines" id="monitorScanlines"></div>
                     </div>
                 </div>
 
-                <div class="gallery-item-card" data-shot="catalog">
-                    <div class="gallery-thumb-wrap">
-                        <img src="./screenshots/catalog.png" alt="Каталог контента" onerror="this.classList.add('is-missing')">
-                        <div class="gallery-thumb-fallback">КАТАЛОГ КОНТЕНТА</div>
+                <div class="monitor-sidebar">
+                    <div class="sidebar-header">
+                        <span>СПИСОК МОДУЛЕЙ</span>
+                        <span class="badge-count">5 ЭКРАНОВ</span>
                     </div>
-                    <div class="gallery-card-info">
-                        <span class="gallery-card-title">Каталог контента</span>
-                        <span class="gallery-card-sub">Modrinth & CurseForge</span>
-                    </div>
-                </div>
 
-                <div class="gallery-item-card" data-shot="gallery">
-                    <div class="gallery-thumb-wrap">
-                        <img src="./screenshots/gallery.png" alt="Галерея скриншотов" onerror="this.classList.add('is-missing')">
-                        <div class="gallery-thumb-fallback">ГАЛЕРЕЯ СКРИНШОТОВ</div>
+                    <div class="gallery-nav-list" id="galleryNavList">
+                        <button class="nav-module-btn active" data-shot="main">
+                            <span class="nav-id">01</span>
+                            <div class="nav-info">
+                                <span class="nav-title">Главный экран</span>
+                                <span class="nav-sub">Профили, запуск, ОЗУ, консоль</span>
+                            </div>
+                        </button>
+                        <button class="nav-module-btn" data-shot="catalog">
+                            <span class="nav-id">02</span>
+                            <div class="nav-info">
+                                <span class="nav-title">Каталог контента</span>
+                                <span class="nav-sub">Интеграция Modrinth API</span>
+                            </div>
+                        </button>
+                        <button class="nav-module-btn" data-shot="gallery">
+                            <span class="nav-id">03</span>
+                            <div class="nav-info">
+                                <span class="nav-title">Менеджер скриншотов</span>
+                                <span class="nav-sub">Просмотр F2 & буфер обмена</span>
+                            </div>
+                        </button>
+                        <button class="nav-module-btn" data-shot="themes">
+                            <span class="nav-id">04</span>
+                            <div class="nav-info">
+                                <span class="nav-title">Редактор оформления</span>
+                                <span class="nav-sub">Кастомизация 14 параметров палитры</span>
+                            </div>
+                        </button>
+                        <button class="nav-module-btn" data-shot="loaders">
+                            <span class="nav-id">05</span>
+                            <div class="nav-info">
+                                <span class="nav-title">Менеджер ядер</span>
+                                <span class="nav-sub">Fabric, Quilt, Forge, NeoForge</span>
+                            </div>
+                        </button>
                     </div>
-                    <div class="gallery-card-info">
-                        <span class="gallery-card-title">Галерея скриншотов</span>
-                        <span class="gallery-card-sub">Просмотр и буфер</span>
-                    </div>
-                </div>
 
-                <div class="gallery-item-card" data-shot="themes">
-                    <div class="gallery-thumb-wrap">
-                        <img src="./screenshots/themes.png" alt="Редактор тем" onerror="this.classList.add('is-missing')">
-                        <div class="gallery-thumb-fallback">РЕДАКТОР ТЕМ</div>
-                    </div>
-                    <div class="gallery-card-info">
-                        <span class="gallery-card-title">Редактор тем</span>
-                        <span class="gallery-card-sub">Пресеты и палитры</span>
-                    </div>
-                </div>
-
-                <div class="gallery-item-card" data-shot="loaders">
-                    <div class="gallery-thumb-wrap">
-                        <img src="./screenshots/loaders.png" alt="Выбор загрузчиков" onerror="this.classList.add('is-missing')">
-                        <div class="gallery-thumb-fallback">ВЫБОР ЗАГРУЗЧИКОВ</div>
-                    </div>
-                    <div class="gallery-card-info">
-                        <span class="gallery-card-title">Выбор загрузчиков</span>
-                        <span class="gallery-card-sub">Forge, NeoForge, Quilt</span>
+                    <div class="active-module-desc">
+                        <div class="desc-label">ОПИСАНИЕ ТЕКУЩЕГО МОДУЛЯ:</div>
+                        <p id="monitorDescText">
+                            Компактная боковая панель с быстрым переключением профилей, сеткой созданных инстансов, удобным ползунком выделения ОЗУ и выводом логов запуска.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Подробная информация об архитектуре -->
+        <!-- МАКСИМАЛЬНО ДЕТАЛЬНАЯ АРХИТЕКТУРА И ТЕХНИЧЕСКИЕ РЕШЕНИЯ -->
         <section class="story-section">
             <div class="section-header">
                 <h2>АРХИТЕКТУРА И ТЕХНИЧЕСКИЕ РЕШЕНИЯ</h2>
-                <p>Как устроен лаунчер под капотом и почему он работает стабильно</p>
+                <p>Глубокий технический разбор: как лаунчер изолирует файлы, оптимизирует память и обрабатывает ошибки</p>
             </div>
 
-            <div class="story-grid">
-                <div class="story-card">
-                    <h3>Изоляция сред выполнения</h3>
-                    <p>
-                        В отличие от стандартных лаунчеров, складывающих все в общий <code>%appdata%/.minecraft</code>, Apiary Launcher монтирует для каждого профиля собственный изолированный каталог <code>--gameDir</code>. Конфигурации, моды, шейдеры и карты версий 1.12.2, 1.20.1 и 1.21.1 физически не пересекаются и не затирают настройки друг друга.
-                    </p>
+            <div class="arch-dashboard">
+                <div class="arch-tree">
+                    <div class="tree-header">ПОДСИСТЕМЫ КЛИЕНТА</div>
+                    <div class="tree-branches">
+                        <button class="tree-node active" data-node="isolation">
+                            <div class="node-icon">[01]</div>
+                            <div class="node-name">Изоляция сред (--gameDir)</div>
+                        </button>
+                        <div class="tree-connector"></div>
+
+                        <button class="tree-node" data-node="auth">
+                            <div class="node-icon">[02]</div>
+                            <div class="node-name">Шифрование токенов (DPAPI)</div>
+                        </button>
+                        <div class="tree-connector"></div>
+
+                        <button class="tree-node" data-node="modrinth">
+                            <div class="node-icon">[03]</div>
+                            <div class="node-name">Modrinth API & Net Service</div>
+                        </button>
+                        <div class="tree-connector"></div>
+
+                        <button class="tree-node" data-node="jvm">
+                            <div class="node-icon">[04]</div>
+                            <div class="node-name">ZGC & Тюнинг аргументов JVM</div>
+                        </button>
+                        <div class="tree-connector"></div>
+
+                        <button class="tree-node" data-node="crash">
+                            <div class="node-icon">[05]</div>
+                            <div class="node-name">Crash Analytics & Mixin Debug</div>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="story-card">
-                    <h3>Безопасный менеджмент токенов</h3>
-                    <p>
-                        Авторизация Microsoft реализована через защищенный модуль с использованием библиотеки Electron <code>safeStorage</code>. Токены доступа шифруются системным криптографическим хранилищем Windows DPAPI перед записью в локальный конфиг и никогда не передаются на сторонние серверы.
-                    </p>
+                <div class="arch-display-panel">
+                    <div class="display-top-bar">
+                        <span class="display-title" id="archDisplayTitle">/sys/core/isolation.spec.ts</span>
+                        <div class="display-status">МОДУЛЬ: <span class="status-ok">АКТИВЕН</span></div>
+                    </div>
+                    
+                    <div class="display-content" id="archDisplayContent">
+                        <!-- Контент инжектится через JS -->
+                    </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="story-card">
-                    <h3>Собственный сетевой стек</h3>
-                    <p>
-                        Все запросы к Modrinth, CurseForge и Adoptium API обрабатываются через Chromium Network Service (модуль <code>net.fetch</code>). Это гарантирует автоматическую поддержку сжатия gzip/brotli, корректную работу через системные прокси и отсутствие зависаний сетевых сокетов при поиске контента.
-                    </p>
+        <!-- СРАВНИТЕЛЬНАЯ ТАБЛИЦА -->
+        <section class="comparison-section">
+            <div class="section-header">
+                <h2>ПОЧЕМУ APIARY LAUNCHER?</h2>
+                <p>Сравнение возможностей нашего клиента со стандартными решениями</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>ФУНКЦИОНАЛ</th>
+                            <th class="highlight">APIARY LAUNCHER</th>
+                            <th>ДЕФОЛТНЫЙ .MINECRAFT</th>
+                            <th>Т-ЛАУНЧЕРЫ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Изоляция сборок (--gameDir)</td>
+                            <td class="status-good highlight">✓ 100% Изолировано</td>
+                            <td class="status-bad">✗ Все в одну кучу</td>
+                            <td class="status-warn">~ Частично</td>
+                        </tr>
+                        <tr>
+                            <td>Каталог Modrinth из коробки</td>
+                            <td class="status-good highlight">✓ Нативный поиск и установка</td>
+                            <td class="status-bad">✗ Отсутствует</td>
+                            <td class="status-warn">~ Сторонний медленный парсер</td>
+                        </tr>
+                        <tr>
+                            <td>Шифрование данных аккаунтов</td>
+                            <td class="status-good highlight">✓ Windows DPAPI (AES-256)</td>
+                            <td class="status-warn">~ Плейнтекст JSON</td>
+                            <td class="status-bad">✗ Передача на сторонние базы</td>
+                        </tr>
+                        <tr>
+                            <td>Java 21 LTS + ZGC Generational</td>
+                            <td class="status-good highlight">✓ Авто-менеджмент флагов</td>
+                            <td class="status-warn">~ Старый G1GC по умолчанию</td>
+                            <td class="status-bad">✗ Ручная возня с Java</td>
+                        </tr>
+                        <tr>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ТЕХНИЧЕСКИЙ СТЕК -->
+        <section class="tech-stack-section">
+            <div class="section-header">
+                <h2>ТЕХНИЧЕСКИЙ СТЕК ПРОЕКТА</h2>
+                <p>На каких библиотеках и технологиях построен Apiary Launcher</p>
+            </div>
+
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <span class="tech-tag">FRAMEWORK</span>
+                    <h3>Electron & Node.js</h3>
+                    <p>Кроссплатформенная среда с разделением на Main и Renderer процессы для стабильной фоновой работы без зависаний UI.</p>
                 </div>
-
-                <div class="story-card">
-                    <h3>Отказоустойчивый запуск</h3>
-                    <p>
-                        Дочерний процесс JVM запускается с контролем кодов выхода. Если игра завершается сбоем, лаунчер считывает последние строки буфера, определяет первопричину (нехватка памяти, сбой видеодрайвера OpenGL, битые Mixin-классы) и выводит понятную диагностику на русском языке.
-                    </p>
+                <div class="tech-card">
+                    <span class="tech-tag">API INTEGRATION</span>
+                    <h3>Modrinth REST API v2</h3>
+                    <p>Асинхронная выгрузка описаний, версий, скриншотов и зависимостей модов с автоматической сортировкой по загрузчику.</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-tag">CORE LAUNCHER</span>
+                    <h3>Minecraft-Launcher-Core</h3>
+                    <p>Надежное ядро генерации манифестов версий, загрузки нативных библиотек Mojang и спавна защищенного процесса JVM.</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-tag">SECURITY</span>
+                    <h3>Node Crypto & DPAPI</h3>
+                    <p>Аппаратная привязка шифрования ключей авторизации к учетной записи текущего пользователя Windows.</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-tag">PERFORMANCE</span>
+                    <h3>Chromium Net Service</h3>
+                    <p>Пакетная закачка тяжелых архивов модов и текстур в несколько потоков с поддержкой алгоритма сжатия Brotli.</p>
+                </div>
+                <div class="tech-card">
+                    <span class="tech-tag">RUNTIME</span>
+                    <h3>Adoptium Temurin JDK</h3>
+                    <p>Чистые портативные среды Java (HotSpot), не требующие системной установки и не трогающие системный PATH.</p>
                 </div>
             </div>
         </section>
@@ -274,7 +395,7 @@
                 </div>
                 <div class="terminal-input-row">
                     <span class="term-prompt">apiary@smp:~$</span>
-                    <input type="text" id="terminalInput" placeholder="Введите команду (help, status, ping, mods, zgc)..." autocomplete="off" />
+                    <input type="text" id="terminalInput" placeholder="Введите команду (help, status, ping, mods, zgc, arch, spec)..." autocomplete="off" />
                     <button type="button" id="terminalSendBtn" class="term-send-btn">ВВОД</button>
                 </div>
                 <div class="terminal-chips">
@@ -283,6 +404,7 @@
                     <button class="term-chip" data-cmd="ping">/ping</button>
                     <button class="term-chip" data-cmd="mods">/mods</button>
                     <button class="term-chip" data-cmd="zgc">/zgc</button>
+                    <button class="term-chip" data-cmd="arch">/arch</button>
                     <button class="term-chip" data-cmd="about">/about</button>
                 </div>
             </div>
@@ -292,7 +414,7 @@
         <section class="steps-section">
             <div class="section-header">
                 <h2>ПОРЯДОК УСТАНОВКИ</h2>
-                <p>Три простых шага для начала игры</p>
+                <p>Три простых шага для начала игры на Apiary SMP</p>
             </div>
 
             <div class="steps-grid">
@@ -324,14 +446,28 @@
                 <button type="button" class="modal-close-btn" id="closeSmartscreenModal">X</button>
             </div>
             <div class="smartscreen-body">
-                <p>При первом запуске операционная система Windows может показать синее окно защиты. Это стандартное поведение фильтра SmartScreen для новых исполняемых файлов без платного корпоративного сертификата подписи кода.</p>
+                <p>При первом запуске операционная система Windows может показать синее окно защиты. Это стандартное поведение фильтра SmartScreen для новых исполняемых файлов без дорогостоящего корпоративного сертификата подписи кода.</p>
                 <div class="smartscreen-steps">
-                    <strong>Инструкция по запуску:</strong>
+                    <strong>Инструкция по первому запуску:</strong>
                     <ol>
-                        <li>Нажмите на текстовую ссылку <strong>«Подробнее»</strong> (More info) в окне предупреждения.</li>
-                        <li>Нажмите появившуюся кнопку <strong>«Выполнить в любом случае»</strong> (Run anyway).</li>
+                        <li>Нажмите на текстовую ссылку <strong>«Подробнее»</strong> (More info) в синем окне предупреждения.</li>
+                        <li>Нажмите появившуюся внизу кнопку <strong>«Выполнить в любом случае»</strong> (Run anyway).</li>
                     </ol>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для полноэкранного просмотра скриншота (100% честные цвета) -->
+    <div id="imageLightboxModal" class="lightbox-overlay">
+        <div class="lightbox-window">
+            <div class="lightbox-header">
+                <span class="lightbox-title" id="lightboxTitle">Оригинальный скриншот</span>
+                <button type="button" class="modal-close-btn" id="lightboxCloseBtn">X</button>
+            </div>
+            <div class="lightbox-body">
+                <img id="lightboxImage" src="" alt="Увеличенный скриншот">
+                <p class="lightbox-desc" id="lightboxDesc"></p>
             </div>
         </div>
     </div>
@@ -345,20 +481,5 @@
     </footer>
 
     <script src="script.js" defer></script>
-
-<!-- Модальное окно для полноэкранного просмотра скриншота -->
-    <div id="imageLightboxModal" class="lightbox-overlay">
-        <div class="lightbox-window">
-            <div class="lightbox-header">
-                <span class="lightbox-title" id="lightboxTitle">Просмотр скриншота</span>
-                <button type="button" class="modal-close-btn" id="lightboxCloseBtn">X</button>
-            </div>
-            <div class="lightbox-body">
-                <img id="lightboxImage" src="" alt="Увеличенный скриншот">
-                <p class="lightbox-desc" id="lightboxDesc"></p>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
