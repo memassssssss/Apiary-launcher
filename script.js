@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.toggle('active', btn.dataset.theme === themeName);
         });
 
+        // Исправлено: вызываем обновление миниатюр карточек галереи
         updateGalleryThumbnails();
     }
 
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 2. ГАЛЕРЕЯ СКРИНШОТОВ С МОДАЛЬНЫМ ОКНОМ (ЛАЙТБОКС) ---
+    // --- 2. ГАЛЕРЕЯ СЕТКИ КАРТОЧЕК С МОДАЛЬНЫМ ОКНОМ (ЛАЙТБОКС) ---
     const screenshotsData = {
         main: {
             filename: 'main.png',
@@ -109,13 +110,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && lightboxModal && lightboxModal.classList.contains('active')) {
             lightboxModal.classList.remove('active');
         }
     });
 
-    // Исправляем вызов функции: передаем действующую переменную currentTheme
+    // Инициализация темы запускает обновление галереи
     setTheme(currentTheme);
 
 
@@ -131,6 +132,7 @@ document.addEventListener('keydown', (e) => {
     const calcResultArgs = document.getElementById('calcResultArgs');
 
     function updateJvmCalculation() {
+        if (!calcTotalRamInput) return;
         const totalRam = parseInt(calcTotalRamInput.value, 10);
         calcTotalRamVal.textContent = `${totalRam} ГБ`;
 
@@ -406,10 +408,10 @@ document.addEventListener('keydown', (e) => {
     });
 
 
-    // --- 7. СИНХРОНИЗАЦИЯ С GITHUB RELEASES API ---
+    // --- 7. СИНХРОНИЗАЦИЯ С GITHUB RELEASES API (СО СТАРТОВОЙ БАЗОЙ) ---
     const GITHUB_USER = "memassssssss";
     const GITHUB_REPO = "Apiary-launcher";
-    const BASE_DOWNLOADS = 40; // <--- Укажи здесь сколько примерно скачиваний было до этого (или оставь так)
+    const BASE_DOWNLOADS = 40; // Стартовая база загрузок
     
     const countEl = document.getElementById('downloadCount');
     const downloadBtn = document.getElementById('downloadBtn');
@@ -421,7 +423,7 @@ document.addEventListener('keydown', (e) => {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const releases = await response.json();
-            let totalDownloads = BASE_DOWNLOADS; // Начинаем суммировать с нашей базы
+            let totalDownloads = BASE_DOWNLOADS;
 
             if (releases && releases.length > 0) {
                 const latest = releases[0];
@@ -447,7 +449,6 @@ document.addEventListener('keydown', (e) => {
             }
         } catch (err) {
             if (countEl) {
-                // Если интернет отвалился или GitHub лег, показываем базу + запас
                 countEl.textContent = (BASE_DOWNLOADS + 24).toLocaleString('ru-RU') + " РАЗ";
             }
         }
