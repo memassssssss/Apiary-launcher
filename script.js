@@ -409,6 +409,8 @@ document.addEventListener('keydown', (e) => {
     // --- 7. СИНХРОНИЗАЦИЯ С GITHUB RELEASES API ---
     const GITHUB_USER = "memassssssss";
     const GITHUB_REPO = "Apiary-launcher";
+    const BASE_DOWNLOADS = 40; // <--- Укажи здесь сколько примерно скачиваний было до этого (или оставь так)
+    
     const countEl = document.getElementById('downloadCount');
     const downloadBtn = document.getElementById('downloadBtn');
     const downloadSubtext = document.getElementById('downloadSubtext');
@@ -419,7 +421,7 @@ document.addEventListener('keydown', (e) => {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const releases = await response.json();
-            let totalDownloads = 0;
+            let totalDownloads = BASE_DOWNLOADS; // Начинаем суммировать с нашей базы
 
             if (releases && releases.length > 0) {
                 const latest = releases[0];
@@ -441,10 +443,13 @@ document.addEventListener('keydown', (e) => {
             }
 
             if (countEl) {
-                countEl.textContent = (totalDownloads > 0 ? totalDownloads : 42).toLocaleString('ru-RU') + " РАЗ";
+                countEl.textContent = totalDownloads.toLocaleString('ru-RU') + " РАЗ";
             }
         } catch (err) {
-            if (countEl) countEl.textContent = "24 РАЗ";
+            if (countEl) {
+                // Если интернет отвалился или GitHub лег, показываем базу + запас
+                countEl.textContent = (BASE_DOWNLOADS + 24).toLocaleString('ru-RU') + " РАЗ";
+            }
         }
     }
 
